@@ -27,7 +27,7 @@ export function Header({ wasmVersion, onExport }: HeaderProps) {
           Export HTML
         </button>
         <a
-          href="https://github.com/McDic/pokercraft-local"
+          href="https://github.com/Rhallyson-S-N/pokercraft_local_tournament"
           target="_blank"
           rel="noopener noreferrer"
           className="github-link"
