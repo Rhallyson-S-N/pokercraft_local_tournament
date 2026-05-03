@@ -1,0 +1,5 @@
+# Allow WASM build artifacts to be tracked
+!*.js
+!*.ts
+!*.wasm
+!*.json

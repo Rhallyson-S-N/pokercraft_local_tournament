@@ -1,0 +1,37 @@
+/* tslint:disable */
+/* eslint-disable */
+export const memory: WebAssembly.Memory;
+export const version: () => [number, number];
+export const init: () => void;
+export const __wbg_equityresult_free: (a: number, b: number) => void;
+export const __wbg_hupreflopequitycache_free: (a: number, b: number) => void;
+export const __wbg_luckcalculator_free: (a: number, b: number) => void;
+export const equityresult_getEquity: (a: number, b: number) => [number, number, number];
+export const equityresult_neverLost: (a: number, b: number) => [number, number, number];
+export const equityresult_new_wasm: (a: any, b: any) => [number, number, number];
+export const hupreflopequitycache_getEquity: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number) => [number, number, number];
+export const hupreflopequitycache_new_wasm: (a: number, b: number) => [number, number, number];
+export const luckcalculator_addResult: (a: number, b: number, c: number) => [number, number];
+export const luckcalculator_luckScore: (a: number) => [number, number, number];
+export const luckcalculator_new_wasm: () => number;
+export const __wbg_card_free: (a: number, b: number) => void;
+export const __wbg_get_card_number: (a: number) => number;
+export const __wbg_get_card_shape: (a: number) => number;
+export const __wbg_set_card_number: (a: number, b: number) => void;
+export const __wbg_set_card_shape: (a: number, b: number) => void;
+export const card_new_wasm: (a: number, b: number) => [number, number, number];
+export const card_toString: (a: number) => [number, number];
+export const __wbg_bankruptcymetric_free: (a: number, b: number) => void;
+export const bankruptcymetric_bankruptcyRate: (a: number) => number;
+export const bankruptcymetric_length: (a: number) => number;
+export const bankruptcymetric_profitableRate: (a: number) => number;
+export const bankruptcymetric_survivalRate: (a: number) => number;
+export const simulate: (a: number, b: number, c: number, d: number, e: number, f: number) => [number, number, number];
+export const __wbindgen_malloc: (a: number, b: number) => number;
+export const __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
+export const __wbindgen_exn_store: (a: number) => void;
+export const __externref_table_alloc: () => number;
+export const __wbindgen_externrefs: WebAssembly.Table;
+export const __wbindgen_free: (a: number, b: number, c: number) => void;
+export const __externref_table_dealloc: (a: number) => void;
+export const __wbindgen_start: () => void;

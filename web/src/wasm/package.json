@@ -1,0 +1,16 @@
+{
+  "name": "pokercraft-wasm",
+  "type": "module",
+  "description": "WebAssembly bindings for pokercraft-core",
+  "version": "3.1.1",
+  "files": [
+    "pokercraft_wasm_bg.wasm",
+    "pokercraft_wasm.js",
+    "pokercraft_wasm.d.ts"
+  ],
+  "main": "pokercraft_wasm.js",
+  "types": "pokercraft_wasm.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
