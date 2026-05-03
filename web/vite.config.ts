@@ -20,7 +20,7 @@ export default defineConfig({
   },
   // Base URL for custom domain (pokercraft.mcdic.net)
   // Use '/' for custom domains, '/<repo-name>/' for github.io URLs
-  base: '/',
+  base: '/pokercraft_local_tournament/',
   build: {
     // Output directory
     outDir: 'dist',
