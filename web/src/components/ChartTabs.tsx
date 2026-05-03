@@ -2,7 +2,7 @@
  * Tab navigation for chart sections
  */
 
-export type ChartTab = 'tournament' | 'handHistory'
+export type ChartTab = 'summary' | 'tournament' | 'handHistory'
 
 interface ChartTabsProps {
   activeTab: ChartTab
@@ -27,12 +27,19 @@ export function ChartTabs({
   return (
     <nav className="chart-tabs">
       <button
+        className={`tab ${activeTab === 'summary' ? 'active' : ''}`}
+        onClick={() => onTabChange('summary')}
+      >
+        <span className="tab-icon">📊</span>
+        <span className="tab-label">Visão Geral</span>
+      </button>
+      <button
         className={`tab ${activeTab === 'tournament' ? 'active' : ''} ${!hasTournaments ? 'disabled' : ''}`}
         onClick={() => hasTournaments && onTabChange('tournament')}
         disabled={!hasTournaments}
       >
         <span className="tab-icon">🏆</span>
-        <span className="tab-label">Tournament Summary</span>
+        <span className="tab-label">Análise de Torneios</span>
         {hasTournaments && <span className="tab-count">{tournamentCount}</span>}
       </button>
       <button
@@ -41,7 +48,7 @@ export function ChartTabs({
         disabled={!hasHandHistories}
       >
         <span className="tab-icon">🃏</span>
-        <span className="tab-label">Hand History</span>
+        <span className="tab-label">Histórico de Mãos</span>
         {hasHandHistories && <span className="tab-count">{handHistoryCount}</span>}
       </button>
     </nav>

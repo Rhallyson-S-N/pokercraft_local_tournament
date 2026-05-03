@@ -7,6 +7,7 @@ import {
   FileUploader,
   ChartTabs,
   type ChartTab,
+  SummaryDashboard,
   TournamentCharts,
   type TournamentChartsRef,
   HandHistoryCharts,
@@ -20,7 +21,7 @@ import { useAnalysisWorker } from './hooks/useAnalysisWorker'
 import { generateExportHTML, downloadHTML } from './export/htmlExport'
 
 function App() {
-  const [activeTab, setActiveTab] = useState<ChartTab>('tournament')
+  const [activeTab, setActiveTab] = useState<ChartTab>('summary')
   const [wasmVersion, setWasmVersion] = useState('')
   const prevTournamentCountRef = useRef(0)
   const tournamentChartsRef = useRef<TournamentChartsRef>(null)
@@ -70,12 +71,14 @@ function App() {
 
   // Auto-switch tab when data changes
   useEffect(() => {
-    if (tournaments.length === 0 && handHistories.length > 0) {
-      setActiveTab('handHistory')
-    } else if (tournaments.length > 0 && handHistories.length === 0) {
-      setActiveTab('tournament')
+    if (tournaments.length === 0 && handHistories.length === 0) {
+      setActiveTab('summary')
+    } else if (tournaments.length > 0 || handHistories.length > 0) {
+      // Stay on current tab or switch to summary if on an empty data tab
+      if (activeTab === 'tournament' && tournaments.length === 0) setActiveTab('summary')
+      if (activeTab === 'handHistory' && handHistories.length === 0) setActiveTab('summary')
     }
-  }, [tournaments.length, handHistories.length])
+  }, [tournaments.length, handHistories.length, activeTab])
 
   return (
     <div className="app">
@@ -119,6 +122,10 @@ function App() {
       {/* Keep both chart trees mounted (display:none) instead of conditional rendering
           to preserve computation state and progress bars across tab switches.
           Tradeoff: higher memory usage from persistent Plotly DOM nodes. */}
+      <div style={{ display: activeTab === 'summary' ? 'block' : 'none' }}>
+        <SummaryDashboard tournaments={tournaments} />
+      </div>
+
       <div style={{ display: activeTab === 'tournament' ? 'block' : 'none' }}>
         <TournamentCharts
           ref={tournamentChartsRef}
