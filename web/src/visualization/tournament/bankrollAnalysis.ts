@@ -109,8 +109,9 @@ export function getBankrollAnalysisData(
       x: labels,
       y: bankruptcyRates,
       name: 'Risco de Quebra',
-      marker: { color: 'rgba(239, 68, 68, 0.8)' },
+      marker: { color: 'rgba(224, 90, 78, 0.8)' },
       text: bankruptcyRates.map(r => `${(r * 100).toFixed(1)}%`),
+      textfont: { family: "'JetBrains Mono', monospace", color: '#fff' },
       textposition: 'auto',
       hovertemplate: '%{x}: %{y:.2%}',
     } as Data,
@@ -119,8 +120,9 @@ export function getBankrollAnalysisData(
       x: labels,
       y: survivalRates,
       name: 'Taxa de Sobrevivência',
-      marker: { color: 'rgba(74, 222, 128, 0.8)' },
+      marker: { color: 'rgba(76, 175, 122, 0.8)' },
       text: survivalRates.map(r => `${(r * 100).toFixed(1)}%`),
+      textfont: { family: "'JetBrains Mono', monospace", color: '#fff' },
       textposition: 'auto',
       hovertemplate: '%{x}: %{y:.2%}',
     } as Data,
@@ -129,28 +131,39 @@ export function getBankrollAnalysisData(
   const layout: Partial<Layout> = {
     paper_bgcolor: 'transparent',
     plot_bgcolor: 'transparent',
-    font: { color: '#e2e8f0' },
-    title: { text: 'Análise de Bankroll' },
+    font: { color: '#e2e8f0', family: "'Crimson Pro', serif" },
+    title: { 
+      text: 'Sua Segurança Financeira (Risco de Quebra)',
+      font: { color: '#c9a84c', family: "'Playfair Display', serif" }
+    },
+    hoverlabel: {
+      bgcolor: 'rgba(7, 26, 14, 0.95)',
+      bordercolor: '#c9a84c',
+      font: { color: '#f0e6c8', size: 13, family: "'JetBrains Mono', monospace" }
+    },
     barmode: 'stack',
     yaxis: {
       gridcolor: 'rgba(255,255,255,0.05)',
       zerolinecolor: 'rgba(255,255,255,0.1)',
+      title: { text: 'Probabilidade de Perda' },
       tickformat: '.0%',
       range: [0, 1],
     },
     xaxis: {
       gridcolor: 'rgba(255,255,255,0.05)',
       zerolinecolor: 'rgba(255,255,255,0.1)',
-      title: { text: 'Bankroll Inicial (Buy-ins)' },
+      title: { text: 'Tamanho da sua Banca (em número de Buy-ins)' },
     },
     legend: {
       orientation: 'h',
       xanchor: 'center',
       x: 0.5,
       yanchor: 'top',
-      y: -0.3,
+      y: -0.2,
+      font: { family: "'JetBrains Mono', monospace", size: 10 }
     },
-    height: 400,
+    margin: { l: 60, r: 40, t: 100, b: 60 },
+    height: 500,
   }
 
   return { traces, layout }

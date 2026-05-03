@@ -1010,3 +1010,4 @@
 
 .gold-divider svg { flex-shrink: 0; }
 
+.chart-description { font-family: 'Crimson Pro', serif; line-height: 1.6; border-top: 1px solid rgba(201, 168, 76, 0.1); padding-top: 1.25rem !important; } .chart-description strong { color: var(--gold); } .chart-description em { color: var(--text-primary); font-style: normal; font-weight: 600; }

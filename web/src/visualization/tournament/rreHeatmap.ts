@@ -35,11 +35,11 @@ export function getRREHeatmapData(tournaments: TournamentSummary[]): RREHeatmapD
   const timeOfDay = data.map(d => d.timeOfDay)
   const rreValues = data.map(d => d.rre)
 
-  // Shared colorscale for dark mode (transparent to bright blue/green)
+  // Shared colorscale for dark mode (gold to green)
   const colorscale: [number, string][] = [
-    [0, 'rgba(30, 41, 59, 0)'],
-    [0.5, 'rgba(59, 130, 246, 0.6)'],
-    [1, 'rgba(74, 222, 128, 0.9)'],
+    [0, 'rgba(7, 26, 14, 0)'],
+    [0.5, 'rgba(201, 168, 76, 0.5)'],
+    [1, 'rgba(76, 175, 122, 0.9)'],
   ]
 
   // Common histogram2d options
@@ -100,7 +100,7 @@ export function getRREHeatmapData(tournaments: TournamentSummary[]): RREHeatmapD
     histfunc: 'sum',
     orientation: 'h',
     ybins: { size: 0.5, start: -3 },
-    marker: { color: 'rgba(96, 165, 250, 0.6)' },
+    marker: { color: 'rgba(201, 168, 76, 0.6)' },
     name: 'RRE Marginal',
     hovertemplate: 'Log2(RRE) = [%{y}]<br>Soma RRE: %{x:.3f}<extra></extra>',
     xaxis: 'x4',
@@ -108,11 +108,19 @@ export function getRREHeatmapData(tournaments: TournamentSummary[]): RREHeatmapD
   } as unknown as Data)
 
   const layout = {
-    title: { text: 'Distribuição de RRE (Return on Risk Entity)' },
+    title: { 
+      text: 'Onde você ganha mais dinheiro? (Mapa de Lucratividade)',
+      font: { color: '#c9a84c', family: "'Playfair Display', serif" }
+    },
     height: 500,
     paper_bgcolor: 'transparent',
     plot_bgcolor: 'transparent',
-    font: { color: '#e2e8f0' },
+    font: { color: '#e2e8f0', family: "'Crimson Pro', serif" },
+    hoverlabel: {
+      bgcolor: 'rgba(7, 26, 14, 0.95)',
+      bordercolor: '#c9a84c',
+      font: { color: '#f0e6c8', size: 13, family: "'JetBrains Mono', monospace" }
+    },
     grid: {
       rows: 1,
       columns: 4,
@@ -120,28 +128,28 @@ export function getRREHeatmapData(tournaments: TournamentSummary[]): RREHeatmapD
     },
     // Column widths ratio 2:2:2:1 (matching Python version)
     xaxis: {
-      title: { text: 'Log2(Buy-In)' },
+      title: { text: 'Valor da Inscrição (Buy-in)' },
       domain: [0, 0.27],
       fixedrange: true,
       zeroline: false,
       gridcolor: 'rgba(255,255,255,0.05)',
     },
     xaxis2: {
-      title: { text: 'Log2(Entradas)' },
+      title: { text: 'Número de Jogadores' },
       domain: [0.29, 0.56],
       fixedrange: true,
       zeroline: false,
       gridcolor: 'rgba(255,255,255,0.05)',
     },
     xaxis3: {
-      title: { text: 'Hora do Dia (mins)' },
+      title: { text: 'Horário do Dia (Horas)' },
       domain: [0.58, 0.85],
       fixedrange: true,
       zeroline: false,
       gridcolor: 'rgba(255,255,255,0.05)',
     },
     xaxis4: {
-      title: { text: 'Marginal' },
+      title: { text: 'Frequência' },
       domain: [0.87, 1],
       fixedrange: true,
       zeroline: false,
@@ -199,7 +207,7 @@ export function getRREHeatmapData(tournaments: TournamentSummary[]): RREHeatmapD
         yref: 'y',
         y0: 0,
         y1: 0,
-        line: { color: 'rgba(239,68,68,0.5)', dash: 'dash' },
+        line: { color: 'rgba(224, 90, 78, 0.5)', dash: 'dash' },
       },
       // Good run line (Log2(4) = 2)
       {
@@ -225,9 +233,9 @@ export function getRREHeatmapData(tournaments: TournamentSummary[]): RREHeatmapD
       },
     ],
     annotations: [
-      { x: 0, y: 0, xref: 'paper', yref: 'y', text: 'Break-even', showarrow: false, xanchor: 'left', yanchor: 'bottom', font: { color: 'rgba(239,68,68,0.8)' } },
-      { x: 0, y: 2, xref: 'paper', yref: 'y', text: 'Good run (4x)', showarrow: false, xanchor: 'left', yanchor: 'bottom', font: { color: 'rgba(255,255,255,0.6)' } },
-      { x: 0, y: 5, xref: 'paper', yref: 'y', text: 'Deep run (32x)', showarrow: false, xanchor: 'left', yanchor: 'bottom', font: { color: 'rgba(255,255,255,0.8)' } },
+      { x: 0, y: 0, xref: 'paper', yref: 'y', text: 'Break-even', showarrow: false, xanchor: 'left', yanchor: 'bottom', font: { color: 'rgba(224, 90, 78, 0.8)', family: "'JetBrains Mono', monospace", size: 11 } },
+      { x: 0, y: 2, xref: 'paper', yref: 'y', text: 'Good run (4x)', showarrow: false, xanchor: 'left', yanchor: 'bottom', font: { color: 'rgba(255,255,255,0.6)', family: "'JetBrains Mono', monospace", size: 11 } },
+      { x: 0, y: 5, xref: 'paper', yref: 'y', text: 'Deep run (32x)', showarrow: false, xanchor: 'left', yanchor: 'bottom', font: { color: 'rgba(255,255,255,0.8)', family: "'JetBrains Mono', monospace", size: 11 } },
     ],
   }
 

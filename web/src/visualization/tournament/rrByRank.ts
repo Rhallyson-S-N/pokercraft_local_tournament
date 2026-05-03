@@ -113,8 +113,17 @@ export function getRRByRankData(tournaments: TournamentSummary[]): RRByRankData 
   const layout: Partial<Layout> = {
     paper_bgcolor: 'transparent',
     plot_bgcolor: 'transparent',
-    font: { color: '#e2e8f0' },
-    title: { text: 'RR por Percentil de Classificação' },
+    font: { color: '#e2e8f0', family: "'Crimson Pro', serif" },
+    title: { 
+      text: 'Habilidade em Reta Final',
+      font: { color: '#c9a84c', family: "'Playfair Display', serif", size: 24 }
+    },
+    hoverlabel: {
+      bgcolor: 'rgba(7, 26, 14, 0.95)',
+      bordercolor: '#c9a84c',
+      font: { color: '#f0e6c8', size: 13, family: "'JetBrains Mono', monospace" }
+    },
+    margin: { l: 80, r: 80, t: 100, b: 80 },
     height: 500,
     xaxis: {
       gridcolor: 'rgba(255,255,255,0.05)',
@@ -149,6 +158,7 @@ export function getRRByRankData(tournaments: TournamentSummary[]): RRByRankData 
       x: 0.5,
       yanchor: 'top',
       y: -0.2,
+      font: { family: "'JetBrains Mono', monospace", size: 10 }
     },
     shapes: [
       // Break-even horizontal line (RR = 1)
@@ -205,7 +215,7 @@ export function getRRByRankData(tournaments: TournamentSummary[]): RRByRankData 
         y: 0.98,
         showarrow: false,
         xanchor: 'right',
-        font: { color: 'rgba(74,222,128,0.9)', size: 12 },
+        font: { color: 'rgba(74,222,128,0.9)', family: "'JetBrains Mono', monospace", size: 11 },
       },
     ],
   }

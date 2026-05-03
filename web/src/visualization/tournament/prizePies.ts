@@ -99,6 +99,25 @@ export function getPrizePiesData(tournaments: TournamentSummary[]): PrizePiesDat
       labels: pieLabels,
       values: pieValues,
       pull: piePulls,
+      hole: 0.45,
+      textinfo: 'percent',
+      textposition: 'outside',
+      insidetextorientation: 'radial',
+      marker: {
+        colors: [
+          '#c9a84c', // Gold
+          '#4caf7a', // Green Profit
+          '#e05a4e', // Red Loss
+          '#74aef2', // Blue
+          '#f59e0b', // Amber
+          '#8b5cf6', // Violet
+          '#10b981', // Emerald
+          '#6366f1', // Indigo
+        ],
+        line: { color: 'rgba(7, 26, 14, 0.8)', width: 2 }
+      },
+      insidetextfont: { family: "'JetBrains Mono', monospace", color: '#fff' },
+      outsidetextfont: { family: "'JetBrains Mono', monospace", color: '#94a3b8' },
       name: 'Prêmios Individuais',
       hovertemplate: '%{label}: %{value:$,.2f}',
       domain: { x: [0, 0.48], y: [0, 1] },
@@ -110,39 +129,63 @@ export function getPrizePiesData(tournaments: TournamentSummary[]): PrizePiesDat
       parents: sunburstParents,
       values: sunburstValues,
       maxdepth: 2,
+      leaf: { opacity: 0.8 },
+      marker: {
+        line: { color: 'rgba(201, 168, 76, 0.4)', width: 1.5 },
+        colorscale: [
+          [0, '#0b2615'],
+          [0.5, '#4caf7a'],
+          [1, '#c9a84c']
+        ]
+      },
+      insidetextorientation: 'horizontal',
+      insidetextfont: { family: "'JetBrains Mono', monospace", color: '#fff', size: 11 },
+      outsidetextfont: { family: "'JetBrains Mono', monospace", color: '#94a3b8', size: 10 },
       name: 'Prêmios por Dia da Semana',
       hovertemplate: '%{label}: %{value:$,.2f}',
-      domain: { x: [0.52, 1], y: [0, 1] },
+      domain: { x: [0.58, 1], y: [0, 1] },
     } as Data,
   ]
 
   const layout: Partial<Layout> = {
     paper_bgcolor: 'transparent',
     plot_bgcolor: 'transparent',
-    font: { color: '#e2e8f0' },
-    title: {
-      text: 'Distribuição de Prêmios',
-      subtitle: { text: 'Torneios individuais e por dia da semana' },
+    font: { color: '#e2e8f0', family: "'Crimson Pro', serif" },
+    hoverlabel: {
+      bgcolor: 'rgba(7, 26, 14, 0.95)',
+      bordercolor: '#c9a84c',
+      font: { color: '#f0e6c8', size: 13, family: "'JetBrains Mono', monospace" }
     },
-    height: 500,
+    title: {
+      text: 'Origem dos seus Prêmios',
+      font: { size: 24, color: '#c9a84c', family: "'Playfair Display', serif" },
+      subtitle: { text: 'Torneios individuais e por dia da semana', font: { color: '#94a3b8' } },
+      y: 0.97
+    },
+    height: 600,
+    margin: { l: 40, r: 40, t: 120, b: 40 },
     annotations: [
       {
-        text: '<b>Prêmios Individuais</b>',
+        text: '<b>PRÊMIOS INDIVIDUAIS</b>',
         x: 0.24,
-        y: 1.05,
+        y: 1.12,
         xref: 'paper',
         yref: 'paper',
+        xanchor: 'center',
+        yanchor: 'bottom',
         showarrow: false,
-        font: { size: 14, color: '#e2e8f0' },
+        font: { size: 11, color: '#c9a84c', family: "'JetBrains Mono', monospace" },
       },
       {
-        text: '<b>Prêmios por Dia da Semana</b>',
-        x: 0.76,
-        y: 1.05,
+        text: '<b>POR DIA DA SEMANA</b>',
+        x: 0.79,
+        y: 1.12,
         xref: 'paper',
         yref: 'paper',
+        xanchor: 'center',
+        yanchor: 'bottom',
         showarrow: false,
-        font: { size: 14, color: '#e2e8f0' },
+        font: { size: 11, color: '#c9a84c', family: "'JetBrains Mono', monospace" },
       },
     ],
   }

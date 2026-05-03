@@ -63,7 +63,14 @@ export function PosicaoTable({ stats, totalHands }: Props) {
         <select 
           value={gtoStack} 
           onChange={e => setGtoStack(e.target.value as StackInterval)}
-          style={{ padding: '0.5rem', borderRadius: '4px', background: '#1e293b', color: '#e2e8f0', border: '1px solid #475569' }}
+          style={{ 
+            padding: '0.5rem', 
+            borderRadius: '4px', 
+            background: 'rgba(7, 26, 14, 0.8)', 
+            color: 'var(--text-primary)', 
+            border: '1px solid rgba(201, 168, 76, 0.3)',
+            fontFamily: "'Crimson Pro', serif"
+          }}
         >
           <option value="all">Todas as mãos (Geral)</option>
           <option value="14">≤ 14 BB (Stack Curto)</option>
@@ -75,14 +82,25 @@ export function PosicaoTable({ stats, totalHands }: Props) {
         </select>
       </div>
 
-      <div style={{ maxWidth: '800px', textAlign: 'center', marginBottom: '2rem', color: '#cbd5e1', fontSize: '0.9rem', lineHeight: '1.6', background: 'rgba(30, 41, 59, 0.4)', padding: '1rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+      <div style={{ 
+        maxWidth: '800px', 
+        textAlign: 'center', 
+        marginBottom: '2rem', 
+        color: 'var(--text-secondary)', 
+        fontSize: '0.9rem', 
+        lineHeight: '1.6', 
+        background: 'rgba(7, 26, 14, 0.6)', 
+        padding: '1.25rem', 
+        borderRadius: '6px', 
+        border: '1px solid rgba(201, 168, 76, 0.15)' 
+      }}>
         {viewMode === 'stats' ? (
           <>
-            <strong>Dica para Iniciantes:</strong> A sua posição na mesa dita a sua estratégia. Posições Iniciais (UTG, MP) exigem que você jogue apenas mãos fortes, pois muitos jogadores agirão depois de você. Já nas Posições Finais (CO, BTN), você tem a vantagem de ver a ação dos adversários e pode jogar mais mãos. Analise as porcentagens abaixo para descobrir onde estão seus maiores lucros e vazamentos.
+            <strong style={{ color: 'var(--gold)' }}>Dica para Iniciantes:</strong> A sua posição na mesa dita a sua estratégia. Posições Iniciais (UTG, MP) exigem que você jogue apenas mãos fortes, pois muitos jogadores agirão depois de você. Já nas Posições Finais (CO, BTN), você tem a vantagem de ver a ação dos adversários e pode jogar mais mãos. Analise as porcentagens abaixo para descobrir onde estão seus maiores lucros e vazamentos.
           </>
         ) : (
           <>
-            <strong>Dica para Iniciantes:</strong> <em>RFI (Raise First In)</em> é quando você é o primeiro a aumentar a aposta. No <strong>Big Blind (BB)</strong> é impossível dar RFI, então mostramos a sua taxa de <strong>3-Bet</strong> (quando você reaumenta a aposta de alguém). Use essa visão para comparar suas frequências reais com a teoria matemática otimizada (GTO).
+            <strong style={{ color: 'var(--gold)' }}>Dica para Iniciantes:</strong> <em>RFI (Raise First In)</em> é quando você é o primeiro a aumentar a aposta. No <strong>Big Blind (BB)</strong> é impossível dar RFI, então mostramos a sua taxa de <strong>3-Bet</strong> (quando você reaumenta a aposta de alguém). Use essa visão para comparar suas frequências reais com a teoria matemática otimizada (GTO).
           </>
         )}
       </div>
@@ -118,7 +136,7 @@ export function PosicaoTable({ stats, totalHands }: Props) {
               <div key={pos} className={`pos-circle ${pos.toLowerCase()} ${colorClass}`}>
                 <strong>{pos}</strong>
                 <span className="pos-sublabel">{label}</span>
-                <span className="profit" style={{ color: Math.abs(diff) < 5 ? '#4ade80' : '#f87171' }}>
+                <span className="profit" style={{ color: Math.abs(diff) < 5 ? 'var(--green-profit)' : 'var(--red-loss)' }}>
                   {myStat.toFixed(1)}%
                 </span>
                 <span className="stat" style={{ color: '#94a3b8' }}>GTO: {gtoStat.toFixed(1)}%</span>
@@ -137,7 +155,7 @@ export function PosicaoTable({ stats, totalHands }: Props) {
             <div key={pos} className={`pos-circle ${pos.toLowerCase()} ${circleColorClass}`}>
               <strong>{pos}</strong>
               <span className="pos-sublabel">Ganhos/perdas</span>
-              <span className="profit" style={{ color: isPositive ? '#4ade80' : '#f87171' }}>
+              <span className="profit" style={{ color: isPositive ? 'var(--green-profit)' : 'var(--red-loss)' }}>
                 {formatPct(pct)}
               </span>
               <span className="stat">Flop %: {flopPct.toFixed(1)}%</span>
@@ -151,7 +169,7 @@ export function PosicaoTable({ stats, totalHands }: Props) {
             <>
               <div className="center-line">
                 <span>RFI Total: </span>
-                <span style={{ color: '#4ade80', fontWeight: 'bold' }}>{overallRfiPct.toFixed(1)}%</span>
+                <span style={{ color: 'var(--green-profit)', fontWeight: 'bold' }}>{overallRfiPct.toFixed(1)}%</span>
               </div>
               <div className="center-line">
                 <span style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '10px' }}>
@@ -163,7 +181,7 @@ export function PosicaoTable({ stats, totalHands }: Props) {
             <>
               <div className="center-line">
                 <span>Ganhos/perdas: </span>
-                <span style={{ color: overallPct >= 0 ? '#4ade80' : '#f87171', fontWeight: 'bold' }}>
+                <span style={{ color: overallPct >= 0 ? 'var(--green-profit)' : 'var(--red-loss)', fontWeight: 'bold' }}>
                   {formatPct(overallPct)}
                 </span>
               </div>

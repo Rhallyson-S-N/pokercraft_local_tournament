@@ -9,6 +9,7 @@ import type { TournamentSummary } from '../types'
 import type { BankrollWorkerResult } from '../workers/analysisWorker'
 import type { ExportChart } from '../export/htmlExport'
 import { TournamentHistoryTable } from './TournamentHistoryTable'
+import { TournamentInsightCards } from './TournamentInsightCards'
 import { yieldToBrowser } from '../utils'
 
 interface ChartData {
@@ -199,7 +200,7 @@ export const TournamentCharts = forwardRef<TournamentChartsRef, TournamentCharts
   return (
     <div className="charts-container">
       {state.isComputing && (
-        <div className="chart-loading">
+        <div className="chart-loading" style={{ marginBottom: '2rem' }}>
           <div className="progress-bar">
             <div
               className="progress-fill"
@@ -209,81 +210,99 @@ export const TournamentCharts = forwardRef<TournamentChartsRef, TournamentCharts
           <p className="progress-message">{state.progress.message}</p>
         </div>
       )}
+      {/* Intuitive Insights Section */}
+      <TournamentInsightCards tournaments={tournaments} bankrollResults={bankrollResults} />
 
       {state.historical && (
         <section className="chart-section" style={{ marginBottom: '3rem' }}>
+          <h3 style={{ fontFamily: "'Playfair Display', serif", color: 'var(--gold)', marginBottom: '1.5rem', textAlign: 'center' }}>
+            A Evolução da sua Carreira
+          </h3>
           <Plot
             data={state.historical.traces}
-            layout={{ ...state.historical.layout, autosize: true }}
+            layout={{ ...state.historical.layout, title: { text: '' }, autosize: true }}
             useResizeHandler
             style={{ width: '100%', height: state.historical.layout.height }}
             config={{ responsive: true }}
           />
-          <div className="chart-description" style={{ color: '#94a3b8', fontSize: '0.9rem', marginTop: '1rem', padding: '0 1rem', textAlign: 'center', maxWidth: '800px', margin: '1rem auto 0' }}>
-            <strong>Entendendo o Gráfico:</strong> Acompanhe a evolução do seu lucro ao longo do tempo. O <em>Max Drawdown</em> mostra a sua maior queda de lucros (swing negativo). A <em>Taxa de Lucro (ITM)</em> indica a frequência com que você entra na zona de premiação. Observe a correlação entre seus ganhos e o <em>Buy-in Médio</em> que você joga.
+          <div className="chart-description">
+            <strong>Como ler este gráfico:</strong> Esta é a sua linha do tempo no poker. A linha verde (Lucro Líquido) deve subir com o tempo. O <em>Max Drawdown</em> (em vermelho) mostra qual foi seu pior momento financeiro — é normal ter quedas, o importante é a recuperação! A <em>Taxa de ITM</em> ideal para torneios costuma ser entre 15% e 25%.
           </div>
         </section>
       )}
 
       {state.rre && (
         <section className="chart-section" style={{ marginBottom: '3rem' }}>
+          <h3 style={{ fontFamily: "'Playfair Display', serif", color: 'var(--gold)', marginBottom: '1.5rem', textAlign: 'center' }}>
+            Onde você ganha mais dinheiro?
+          </h3>
           <Plot
             data={state.rre.traces}
-            layout={{ ...state.rre.layout, autosize: true }}
+            layout={{ ...state.rre.layout, title: { text: '' }, autosize: true }}
             useResizeHandler
             style={{ width: '100%', height: state.rre.layout.height }}
             config={{ responsive: true }}
           />
-          <div className="chart-description" style={{ color: '#94a3b8', fontSize: '0.9rem', marginTop: '1rem', padding: '0 1rem', textAlign: 'center', maxWidth: '800px', margin: '1rem auto 0' }}>
-            <strong>Entendendo o Gráfico:</strong> RRE (Retorno Relativo) mede a eficiência do seu lucro em relação à inscrição do torneio. Quanto mais vermelho, mais lucrativo você é naquele cenário. Este mapa de calor ajuda a identificar quais valores de Buy-in, tamanho de fields (Entradas) e horários do dia trazem o melhor desempenho para o seu jogo.
+          <div className="chart-description">
+            <strong>Como ler este gráfico:</strong> Este mapa de calor revela seus "pontos doces". Quanto mais intensa a cor verde, maior o seu lucro naquela categoria. Use isso para decidir: você ganha mais em torneios com muitos jogadores ou poucos? De manhã ou à noite? Jogue mais onde você é mais verde!
           </div>
         </section>
       )}
 
       {state.bankroll && (
         <section className="chart-section" style={{ marginBottom: '3rem' }}>
+          <h3 style={{ fontFamily: "'Playfair Display', serif", color: 'var(--gold)', marginBottom: '1.5rem', textAlign: 'center' }}>
+            Sua Segurança Financeira
+          </h3>
           <Plot
             data={state.bankroll.traces}
-            layout={{ ...state.bankroll.layout, autosize: true }}
+            layout={{ ...state.bankroll.layout, title: { text: '' }, autosize: true }}
             useResizeHandler
             style={{ width: '100%', height: state.bankroll.layout.height }}
             config={{ responsive: true }}
           />
-          <div className="chart-description" style={{ color: '#94a3b8', fontSize: '0.9rem', marginTop: '1rem', padding: '0 1rem', textAlign: 'center', maxWidth: '800px', margin: '1rem auto 0' }}>
-            <strong>Entendendo o Gráfico:</strong> Simula o Risco de Quebra (falência) com base no seu histórico real usando o Método Monte Carlo. Para cada tamanho de banca (em número de Buy-ins), a barra vermelha mostra sua chance matemática de perder tudo. Um gerenciamento profissional exige manter a barra de "Risco de Quebra" o mais próximo possível de zero.
+          <div className="chart-description">
+            <strong>Como ler este gráfico:</strong> Aqui testamos se a sua banca aguenta a variância. Cada barra representa um tamanho de banca (Ex: 100 Buy-ins). A parte vermelha é o seu risco de perder tudo. Se a barra vermelha estiver alta para o seu volume atual, você deve considerar jogar torneios mais baratos para proteger seu capital.
           </div>
         </section>
       )}
 
       {state.prizePies && (
         <section className="chart-section" style={{ marginBottom: '3rem' }}>
+          <h3 style={{ fontFamily: "'Playfair Display', serif", color: 'var(--gold)', marginBottom: '1.5rem', textAlign: 'center' }}>
+            Origem dos seus Prêmios
+          </h3>
           <Plot
             data={state.prizePies.traces}
-            layout={{ ...state.prizePies.layout, autosize: true }}
+            layout={{ ...state.prizePies.layout, title: { text: '' }, autosize: true }}
             useResizeHandler
             style={{ width: '100%', height: state.prizePies.layout.height }}
             config={{ responsive: true }}
           />
-          <div className="chart-description" style={{ color: '#94a3b8', fontSize: '0.9rem', marginTop: '1rem', padding: '0 1rem', textAlign: 'center', maxWidth: '800px', margin: '1rem auto 0' }}>
-            <strong>Entendendo o Gráfico:</strong> Mostra a origem de todo o dinheiro que você ganhou. O gráfico da esquerda destaca quais torneios específicos trouxeram a maior parte do seu retorno financeiro. O da direita divide seus ganhos pelos dias da semana, ajudando a identificar em quais dias você costuma performar melhor.
+          <div className="chart-description">
+            <strong>Como ler este gráfico:</strong> À esquerda, veja quais torneios específicos pagaram as suas contas. À direita, o "Sunburst" mostra os dias da semana mais lucrativos. Se um dia específico (ex: Domingo) está muito maior que os outros, esse é o seu dia de "Grind" principal!
           </div>
         </section>
       )}
 
       {state.rrByRank && (
         <section className="chart-section" style={{ marginBottom: '3rem' }}>
+          <h3 style={{ fontFamily: "'Playfair Display', serif", color: 'var(--gold)', marginBottom: '1.5rem', textAlign: 'center' }}>
+            Habilidade em Reta Final
+          </h3>
           <Plot
             data={state.rrByRank.traces}
-            layout={{ ...state.rrByRank.layout, autosize: true }}
+            layout={{ ...state.rrByRank.layout, title: { text: '' }, autosize: true }}
             useResizeHandler
             style={{ width: '100%', height: state.rrByRank.layout.height }}
             config={{ responsive: true }}
           />
-          <div className="chart-description" style={{ color: '#94a3b8', fontSize: '0.9rem', marginTop: '1rem', padding: '0 1rem', textAlign: 'center', maxWidth: '800px', margin: '1rem auto 0' }}>
-            <strong>Entendendo o Gráfico:</strong> Analisa a sua capacidade de transformar "chegar longe" (Percentil de Classificação) em dinheiro (RR). A linha tracejada verde indica onde os prêmios começam (ITM). A linha de tendência contínua mostra se as suas retas finais estão gerando grandes multiplicações de prêmio, habilidade fundamental para jogadores lucrativos a longo prazo.
+          <div className="chart-description">
+            <strong>Como ler este gráfico:</strong> Este gráfico mostra o quanto você "crava" quando chega perto do fim. A linha tracejada verde marca o início dos prêmios. Se os seus pontos sobem drasticamente no final do gráfico (direita), você é um jogador que sabe fechar o jogo e conquistar os primeiros lugares!
           </div>
         </section>
       )}
+
 
       <TournamentHistoryTable tournaments={tournaments} />
     </div>

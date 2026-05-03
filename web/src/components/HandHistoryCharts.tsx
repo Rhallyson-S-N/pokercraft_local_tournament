@@ -279,17 +279,26 @@ export const HandHistoryCharts = forwardRef<HandHistoryChartsRef, HandHistoryCha
 
         {state.activeSubTab === 'ev' && state.allInEquity && (
           <section className="chart-section">
-            <div style={{ marginBottom: '1.5rem', padding: '1.5rem', background: 'rgba(15, 23, 42, 0.6)', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.05)', color: '#94a3b8' }}>
-              <h4 style={{ color: '#e2e8f0', marginTop: 0, marginBottom: '0.75rem', fontSize: '1.1rem' }}>Sorte ou Azar? Entenda seus All-ins (Gráfico de EV)</h4>
+            <div style={{ 
+              marginBottom: '1.5rem', 
+              padding: '1.5rem', 
+              background: 'rgba(7, 26, 14, 0.6)', 
+              borderRadius: '6px', 
+              border: '1px solid rgba(201, 168, 76, 0.2)', 
+              color: 'var(--text-secondary)' 
+            }}>
+              <h4 style={{ color: 'var(--gold)', marginTop: 0, marginBottom: '0.75rem', fontSize: '1.1rem', fontFamily: "'Playfair Display', serif", letterSpacing: '0.05em' }}>
+                Sorte ou Azar? Entenda seus All-ins (Gráfico de EV)
+              </h4>
               <p style={{ margin: '0 0 0.5rem 0', lineHeight: 1.5, fontSize: '0.95rem' }}>
                 No poker, quando você aposta todas as suas fichas (All-in), a matemática te dá uma porcentagem de chance exata de vencer aquela mão. Este gráfico analisa todas as vezes que você foi All-in para te dizer se você está "dando sorte" ou não!
               </p>
               <ul style={{ margin: '0.5rem 0', paddingLeft: '1.2rem', lineHeight: 1.6, fontSize: '0.95rem' }}>
-                <li><span style={{ color: '#e2e8f0', fontWeight: 'bold' }}>Gráfico de Cima (Quantidade):</span> Mostra quantas vezes você foi All-in. Barras mais à direita significam que você era o favorito (boas chances). As cores mostram se você <span style={{ color: '#4ade80' }}>ganhou (Verde)</span>, <span style={{ color: '#fbbf24' }}>empatou (Amarelo)</span> ou <span style={{ color: '#ef4444' }}>perdeu (Vermelho)</span>.</li>
-                <li><span style={{ color: '#e2e8f0', fontWeight: 'bold' }}>Gráfico de Baixo (Taxa de Vitória):</span> Aqui é onde você descobre a verdade! A <strong>linha tracejada</strong> que sobe na diagonal representa a "justiça matemática" perfeita.</li>
+                <li><span style={{ color: 'var(--text-primary)', fontWeight: 'bold' }}>Gráfico de Cima (Quantidade):</span> Mostra quantas vezes você foi All-in. Barras mais à direita significam que você era o favorito (boas chances). As cores mostram se você <span style={{ color: 'var(--green-profit)', fontWeight: 600 }}>ganhou (Verde)</span>, <span style={{ color: '#f59e0b', fontWeight: 600 }}>empatou (Amarelo)</span> ou <span style={{ color: 'var(--red-loss)', fontWeight: 600 }}>perdeu (Vermelho)</span>.</li>
+                <li><span style={{ color: 'var(--text-primary)', fontWeight: 'bold' }}>Gráfico de Baixo (Taxa de Vitória):</span> Aqui é onde você descobre a verdade! A <strong>linha tracejada</strong> que sobe na diagonal representa a "justiça matemática" perfeita.</li>
               </ul>
               <p style={{ margin: '0.5rem 0 0 0', lineHeight: 1.5, fontSize: '0.95rem' }}>
-                <em>Dica de Leitura:</em> Se no gráfico de baixo as barras verdes <strong style={{ color: '#4ade80' }}>ultrapassam</strong> a linha tracejada, você teve sorte (ganhou mais vezes do que deveria). Se elas ficam <strong style={{ color: '#ef4444' }}>abaixo</strong> da linha tracejada, você deu azar e a matemática estava contra você no curto prazo!
+                <em>Dica de Leitura:</em> Se no gráfico de baixo as barras verdes <strong style={{ color: 'var(--green-profit)' }}>ultrapassam</strong> a linha tracejada, você teve sorte (ganhou mais vezes do que deveria). Se elas ficam <strong style={{ color: 'var(--red-loss)' }}>abaixo</strong> da linha tracejada, você deu azar e a matemática estava contra você no curto prazo!
               </p>
             </div>
             <Plot

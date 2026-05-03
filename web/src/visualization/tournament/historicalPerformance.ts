@@ -70,6 +70,7 @@ export function getHistoricalPerformanceData(
     y: netProfit,
     name: 'Lucro Líquido',
     mode: 'lines',
+    line: { color: '#4caf7a', width: 3 },
     legendgroup: 'profit',
     legendgrouptitle: { text: 'Lucros & Rake' },
     hovertemplate: '%{y:$,.2f}',
@@ -81,6 +82,7 @@ export function getHistoricalPerformanceData(
     y: netRake,
     name: 'Rake Pago',
     mode: 'lines',
+    line: { color: '#c9a84c', width: 2, dash: 'dot' },
     legendgroup: 'profit',
     visible: 'legendonly',
     hovertemplate: '%{y:$,.2f}',
@@ -92,6 +94,7 @@ export function getHistoricalPerformanceData(
     y: idealProfit,
     name: 'Lucro Ideal',
     mode: 'lines',
+    line: { color: '#74aef2', width: 2 },
     legendgroup: 'profit',
     hovertemplate: '%{y:$,.2f}',
     yaxis: 'y1',
@@ -102,6 +105,7 @@ export function getHistoricalPerformanceData(
     y: maxDrawdown,
     name: 'Max Drawdown',
     mode: 'lines',
+    line: { color: '#e05a4e', width: 1.5, dash: 'dash' },
     legendgroup: 'profit',
     hovertemplate: '%{y:$,.2f}',
     yaxis: 'y1',
@@ -178,10 +182,20 @@ export function getHistoricalPerformanceData(
   const layout: Partial<Layout> = {
     paper_bgcolor: 'transparent',
     plot_bgcolor: 'transparent',
-    font: { color: '#e2e8f0' },
-    title: { text: 'Performance Histórica' },
+    font: { color: '#e2e8f0', family: "'Crimson Pro', serif" },
+    title: { 
+      text: 'A Evolução da sua Carreira', 
+      font: { size: 24, color: '#c9a84c', family: "'Playfair Display', serif" },
+      y: 0.98
+    },
     hovermode: 'x unified',
-    height: 800,
+    hoverlabel: {
+      bgcolor: 'rgba(7, 26, 14, 0.95)',
+      bordercolor: '#c9a84c',
+      font: { color: '#f0e6c8', size: 13, family: "'JetBrains Mono', monospace" }
+    },
+    margin: { l: 80, r: 40, t: 80, b: 80 },
+    height: 850,
     grid: {
       rows: 3,
       columns: 1,
@@ -208,32 +222,32 @@ export function getHistoricalPerformanceData(
     yaxis: {
       gridcolor: 'rgba(255,255,255,0.05)',
       zerolinecolor: 'rgba(255,255,255,0.1)',
-      title: { text: 'Lucro Líquido & Rake' },
+      title: { text: 'Dinheiro Acumulado ($)', standoff: 20 },
       tickformat: '$',
-      domain: [0.7, 1],
+      domain: [0.72, 1],
     },
     yaxis2: {
       gridcolor: 'rgba(255,255,255,0.05)',
       zerolinecolor: 'rgba(255,255,255,0.1)',
-      title: { text: 'Taxa de Lucro (ITM)' },
+      title: { text: 'Frequência de Prêmios (%)', standoff: 20 },
       tickformat: '.0%',
       range: [
         Math.max(0, minProfitableRolling - 0.02),
         Math.min(1, maxProfitableRolling + 0.02),
       ],
-      domain: [0.4, 0.65],
+      domain: [0.38, 0.64],
     },
     yaxis3: {
       gridcolor: 'rgba(255,255,255,0.05)',
       zerolinecolor: 'rgba(255,255,255,0.1)',
-      title: { text: 'Buy-In Médio' },
+      title: { text: 'Buy-In Médio', standoff: 20 },
       type: 'log',
       tickformat: '$',
       range: [
         Math.log10(Math.max(minAvgBuyIn, 0.1)) - 0.05,
         Math.log10(Math.max(maxAvgBuyIn, 0.1)) + 0.05,
       ],
-      domain: [0.05, 0.35],
+      domain: [0, 0.30],
     },
     legend: {
       orientation: 'h',
@@ -253,7 +267,7 @@ export function getHistoricalPerformanceData(
         yref: 'y',
         y0: 0,
         y1: 0,
-        line: { color: 'rgba(239,68,68,0.5)', dash: 'dash' },
+        line: { color: 'rgba(224,90,78,0.4)', dash: 'dash', width: 1 },
       },
       // Current net profit line
       {
@@ -264,7 +278,7 @@ export function getHistoricalPerformanceData(
         yref: 'y',
         y0: netProfit[netProfit.length - 1],
         y1: netProfit[netProfit.length - 1],
-        line: { color: 'rgba(59,130,246,0.5)', dash: 'dash' },
+        line: { color: 'rgba(201,168,76,0.3)', dash: 'dot', width: 1 },
       },
       // Max drawdown line
       {
@@ -319,7 +333,7 @@ export function getHistoricalPerformanceData(
         y: 0,
         yanchor: 'top',
         showarrow: false,
-        font: { color: 'rgba(239,68,68,0.8)', size: 14 },
+        font: { color: 'rgba(224,90,78,0.6)', size: 12 },
       },
       {
         text: '<b>Lucro Atual</b>',
@@ -330,7 +344,7 @@ export function getHistoricalPerformanceData(
         y: netProfit[netProfit.length - 1],
         yanchor: 'bottom',
         showarrow: false,
-        font: { color: 'rgba(96,165,250,0.8)', size: 14 },
+        font: { color: 'rgba(201,168,76,0.6)', size: 12 },
       },
       {
         text: '<b>Max Drawdown</b>',

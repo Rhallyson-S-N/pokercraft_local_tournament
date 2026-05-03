@@ -100,10 +100,10 @@ function getCellColor(profit: number, count: number, isGtoMode: boolean, isInGto
  */
 function getProfitTextColor(profit: number, isGtoMode: boolean, isInGtoRange: boolean): string {
   if (isGtoMode) {
-    return isInGtoRange ? '#4ade80' : '#475569'
+    return isInGtoRange ? 'var(--green-profit)' : 'var(--text-muted)'
   }
 
-  if (Math.abs(profit) < 0.005) return '#d4c87a'
+  if (Math.abs(profit) < 0.005) return 'var(--gold)'
   if (profit > 0) return '#c8e6a0'
   return '#f5c0c0'
 }
@@ -290,7 +290,15 @@ export function HoleCardsGrid({ handHistories }: HoleCardsGridProps) {
           <select 
             value={selectedStackInterval} 
             onChange={e => setSelectedStackInterval(e.target.value as StackInterval)}
-            style={{ padding: '0.5rem', borderRadius: '4px', background: '#1e293b', color: '#e2e8f0', border: '1px solid #475569', minWidth: '200px' }}
+            style={{ 
+              padding: '0.5rem', 
+              borderRadius: '4px', 
+              background: 'rgba(7, 26, 14, 0.8)', 
+              color: 'var(--text-primary)', 
+              border: '1px solid rgba(201, 168, 76, 0.3)', 
+              minWidth: '200px',
+              fontFamily: "'Crimson Pro', serif"
+            }}
           >
             <option value="all">Todas as mãos (Geral)</option>
             <option value="14">≤ 14 BB (Stack Curto)</option>
@@ -301,13 +309,14 @@ export function HoleCardsGrid({ handHistories }: HoleCardsGridProps) {
             <option value="100">&gt; 50 BB (Deep Stack)</option>
           </select>
 
-          <div style={{ display: 'flex', background: '#1e293b', borderRadius: '4px', padding: '2px', border: '1px solid #475569' }}>
+          <div style={{ display: 'flex', background: 'rgba(7, 26, 14, 0.8)', borderRadius: '4px', padding: '2px', border: '1px solid rgba(201, 168, 76, 0.3)' }}>
             <button
               onClick={() => setViewMode('profit')}
               style={{
                 padding: '0.4rem 1rem', border: 'none', borderRadius: '3px', cursor: 'pointer',
-                background: viewMode === 'profit' ? '#3b82f6' : 'transparent',
-                color: viewMode === 'profit' ? '#fff' : '#94a3b8'
+                background: viewMode === 'profit' ? 'var(--gold)' : 'transparent',
+                color: viewMode === 'profit' ? 'var(--felt-dark)' : 'var(--text-muted)',
+                fontWeight: 600
               }}
             >
               Lucro Real
@@ -318,9 +327,10 @@ export function HoleCardsGrid({ handHistories }: HoleCardsGridProps) {
               title={selectedPosition === 'all' ? 'Selecione uma posição para ver o GTO' : ''}
               style={{
                 padding: '0.4rem 1rem', border: 'none', borderRadius: '3px', cursor: selectedPosition === 'all' ? 'not-allowed' : 'pointer',
-                background: viewMode === 'gto' ? '#3b82f6' : 'transparent',
-                color: viewMode === 'gto' ? '#fff' : '#94a3b8',
-                opacity: selectedPosition === 'all' ? 0.5 : 1
+                background: viewMode === 'gto' ? 'var(--gold)' : 'transparent',
+                color: viewMode === 'gto' ? 'var(--felt-dark)' : 'var(--text-muted)',
+                opacity: selectedPosition === 'all' ? 0.5 : 1,
+                fontWeight: 600
               }}
             >
               Range GTO
@@ -329,8 +339,8 @@ export function HoleCardsGrid({ handHistories }: HoleCardsGridProps) {
         </div>
         
         {viewMode === 'gto' && selectedPosition !== 'all' && (
-          <div style={{ fontSize: '0.85rem', color: '#94a3b8', maxWidth: '600px', textAlign: 'center' }}>
-            <strong>Estratégia GTO Pré-Flop:</strong> Mapa de calor matemático baseado nas frequências da posição e stack selecionados. As cores das células indicam a ação pré-flop recomendada (Raise, All-in ou Call) para as melhores mãos iniciais.
+          <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', maxWidth: '600px', textAlign: 'center', background: 'rgba(7, 26, 14, 0.4)', padding: '1rem', borderRadius: '6px', border: '1px solid var(--gold-muted)' }}>
+            <strong style={{ color: 'var(--gold)' }}>Estratégia GTO Pré-Flop:</strong> Mapa de calor matemático baseado nas frequências da posição e stack selecionados. As cores das células indicam a ação pré-flop recomendada (Raise, All-in ou Call) para as melhores mãos iniciais.
           </div>
         )}
       </div>
@@ -379,16 +389,16 @@ export function HoleCardsGrid({ handHistories }: HoleCardsGridProps) {
           <div className="holecards-legend">
             <h4 style={{ marginBottom: '10px' }}>ESTRATÉGIA GTO</h4>
             <div className="legend-item" style={{ marginBottom: '6px' }}>
-              <span className="legend-swatch" style={{ background: '#3b82f6', border: '1px solid rgba(255,255,255,0.2)' }}></span>
+              <span className="legend-swatch" style={{ background: 'var(--gold)', border: '1px solid rgba(255,255,255,0.2)' }}></span>
               <span>Raise (Aumentar)</span>
             </div>
             <div className="legend-item" style={{ marginBottom: '6px' }}>
-              <span className="legend-swatch" style={{ background: '#ef4444', border: '1px solid rgba(255,255,255,0.2)' }}></span>
+              <span className="legend-swatch" style={{ background: 'var(--red-loss)', border: '1px solid rgba(255,255,255,0.2)' }}></span>
               <span>All-in (Push)</span>
             </div>
             {gtoContext.posStr === 'SB' && gtoContext.stack >= 30 && (
               <div className="legend-item" style={{ marginBottom: '6px' }}>
-                <span className="legend-swatch" style={{ background: '#eab308', border: '1px solid rgba(255,255,255,0.2)' }}></span>
+                <span className="legend-swatch" style={{ background: '#f59e0b', border: '1px solid rgba(255,255,255,0.2)' }}></span>
                 <span>Call (Limp)</span>
               </div>
             )}
@@ -423,15 +433,15 @@ export function HoleCardsGrid({ handHistories }: HoleCardsGridProps) {
                     let gradientParts = []
                     let currentPct = 0
                     if (rPct > 0) {
-                      gradientParts.push(`#3b82f6 ${currentPct}%`, `#3b82f6 ${currentPct + rPct}%`)
+                      gradientParts.push(`var(--gold) ${currentPct}%`, `var(--gold) ${currentPct + rPct}%`)
                       currentPct += rPct
                     }
                     if (aPct > 0) {
-                      gradientParts.push(`#ef4444 ${currentPct}%`, `#ef4444 ${currentPct + aPct}%`)
+                      gradientParts.push(`var(--red-loss) ${currentPct}%`, `var(--red-loss) ${currentPct + aPct}%`)
                       currentPct += aPct
                     }
                     if (currentPct < 100) {
-                      gradientParts.push(`#eab308 ${currentPct}%`, `#eab308 100%`)
+                      gradientParts.push(`#f59e0b ${currentPct}%`, `#f59e0b 100%`)
                     }
                     
                     bgColor = gradientParts.length > 0 
