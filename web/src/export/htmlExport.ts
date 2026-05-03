@@ -8,7 +8,6 @@ import type { HandHistory } from '../types'
 import type { PositionStat } from '../visualization/handHistory/stats'
 import {
   getHandHistoryNetProfit,
-  getHandHistoryOffsetFromButton,
 } from '../types'
 
 export interface ExportChart {

@@ -214,7 +214,6 @@ export async function collectAllInDataAsync(
   const results = await Promise.all(workerPromises)
   const allData = results.flat()
 
-
   // Calculate combined luck score
   const wasmModule = await import('../../wasm/pokercraft_wasm')
   await wasmModule.default()  // Initialize WASM
@@ -233,6 +232,11 @@ export async function collectAllInDataAsync(
     // Failed
   }
   luckCalc.free()
+
+  // Suppress unused variable warnings for stats (kept for future logging)
+  void totalCacheHits
+  void totalCacheMisses
+  void totalFullCalcs
 
   return { data: allData, luckScore }
 }
@@ -426,9 +430,6 @@ export function createAllInEquityChart(
     },
     yaxis2: {
       gridcolor: 'rgba(255,255,255,0.05)',
-      zerolinecolor: 'rgba(255,255,255,0.1)',
-      title: { text: 'Taxa de Vitória (%)' },
-      tickformat: '.0%',
       zerolinecolor: 'rgba(255,255,255,0.1)',
       title: { text: 'Taxa de Vitória (%)' },
       tickformat: '.0%',

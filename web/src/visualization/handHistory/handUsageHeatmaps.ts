@@ -221,7 +221,7 @@ export async function getHandUsageHeatmapsData(handHistories: HandHistory[]): Pr
     [9, 1, null, 'Geral'],
   ]
 
-  for (const [figRow, figCol, offset, posName] of positions) {
+  for (const [figRow, _figCol, offset, posName] of positions) {
     const matrix = matrices.get(offset)!
     const vpip = aggregateVPIP(matrix)
     const rangeUsage = getRangeUsage(matrix, 0.1)

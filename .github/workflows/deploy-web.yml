@@ -2,16 +2,11 @@
 name: Deploy Web to GitHub Pages
 
 on:
-  # Run on pushes to master that change web/ or Rust WASM files
+  # Run on pushes to master that change web/ files
   push:
     branches: [master]
     paths:
       - 'web/**'
-      - 'crates/core/**'
-      - 'crates/wasm/**'
-      - 'Cargo.toml'
-      - 'Cargo.lock'
-      - 'web/public/hu_preflop_cache.bin'
       - '.github/workflows/deploy-web.yml'
   # Allow manual trigger
   workflow_dispatch:
@@ -33,15 +28,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Install wasm-pack
-        run: cargo install wasm-pack
-
-      - name: Build WASM
-        run: ./scripts/build-wasm.sh
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
