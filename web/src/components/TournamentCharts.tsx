@@ -8,6 +8,7 @@ import type { Data, Layout } from 'plotly.js-dist-min'
 import type { TournamentSummary } from '../types'
 import type { BankrollWorkerResult } from '../workers/analysisWorker'
 import type { ExportChart } from '../export/htmlExport'
+import { TournamentHistoryTable } from './TournamentHistoryTable'
 import { yieldToBrowser } from '../utils'
 
 interface ChartData {
@@ -283,6 +284,8 @@ export const TournamentCharts = forwardRef<TournamentChartsRef, TournamentCharts
           </div>
         </section>
       )}
+
+      <TournamentHistoryTable tournaments={tournaments} />
     </div>
   )
 })
