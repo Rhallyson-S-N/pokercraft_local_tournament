@@ -304,7 +304,7 @@ export function createAllInEquityChart(
       y: winCounts,
       width: binWidths,
       customdata: binRanges.map((range, i) => [range, winCounts[i]]),
-      name: 'Hero Won',
+      name: 'Ganhou',
       marker: { color: OPACITY_GREEN },
       hovertemplate: 'Equity: %{customdata[0]}<br>Won: %{customdata[1]}<extra></extra>',
       legendgroup: 'won',
@@ -316,7 +316,7 @@ export function createAllInEquityChart(
       y: chopCounts,
       width: binWidths,
       customdata: binRanges.map((range, i) => [range, chopCounts[i]]),
-      name: 'Chopped',
+      name: 'Empatou',
       marker: { color: OPACITY_YELLOW },
       hovertemplate: 'Equity: %{customdata[0]}<br>Chopped: %{customdata[1]}<extra></extra>',
       legendgroup: 'chop',
@@ -328,7 +328,7 @@ export function createAllInEquityChart(
       y: loseCounts,
       width: binWidths,
       customdata: binRanges.map((range, i) => [range, loseCounts[i]]),
-      name: 'Hero Lost',
+      name: 'Perdeu',
       marker: { color: OPACITY_RED },
       hovertemplate: 'Equity: %{customdata[0]}<br>Lost: %{customdata[1]}<extra></extra>',
       legendgroup: 'lost',
@@ -383,7 +383,10 @@ export function createAllInEquityChart(
   const luckPercentile = 100 * (1 - (1 / (1 + Math.exp(-luckScore * 1.7))))
 
   const layout: Partial<Layout> = {
-    title: { text: 'All-in Equity Analysis' },
+    paper_bgcolor: 'transparent',
+    plot_bgcolor: 'transparent',
+    font: { color: '#e2e8f0' },
+    title: { text: 'Análise de Sorte nos All-ins (Equidade)' },
     height: 700,
     barmode: 'overlay',
     grid: {
@@ -392,6 +395,8 @@ export function createAllInEquityChart(
       pattern: 'independent',
     },
     xaxis: {
+      gridcolor: 'rgba(255,255,255,0.05)',
+      zerolinecolor: 'rgba(255,255,255,0.1)',
       tickformat: '.0%',
       range: [0, 1],
       fixedrange: true,
@@ -400,7 +405,9 @@ export function createAllInEquityChart(
       matches: 'x2',
     },
     yaxis: {
-      title: { text: 'Count' },
+      gridcolor: 'rgba(255,255,255,0.05)',
+      zerolinecolor: 'rgba(255,255,255,0.1)',
+      title: { text: 'Quantidade de Mãos' },
       fixedrange: true,
       domain: [0.58, 1],
       anchor: 'x',
@@ -408,7 +415,9 @@ export function createAllInEquityChart(
       showticklabels: false,
     },
     xaxis2: {
-      title: { text: 'Hero Equity at All-in' },
+      gridcolor: 'rgba(255,255,255,0.05)',
+      zerolinecolor: 'rgba(255,255,255,0.1)',
+      title: { text: 'Sua Chance de Vitória no All-in (%)' },
       tickformat: '.0%',
       range: [0, 1],
       fixedrange: true,
@@ -416,7 +425,12 @@ export function createAllInEquityChart(
       anchor: 'y2',
     },
     yaxis2: {
-      title: { text: 'Win/Chop/Loss Rate' },
+      gridcolor: 'rgba(255,255,255,0.05)',
+      zerolinecolor: 'rgba(255,255,255,0.1)',
+      title: { text: 'Taxa de Vitória (%)' },
+      tickformat: '.0%',
+      zerolinecolor: 'rgba(255,255,255,0.1)',
+      title: { text: 'Taxa de Vitória (%)' },
       tickformat: '.0%',
       range: [0, 1],
       fixedrange: true,
@@ -432,13 +446,13 @@ export function createAllInEquityChart(
     },
     annotations: [
       {
-        text: `${allInData.length} all-ins | Luck Score: ${luckScore.toFixed(2)} (Top ${luckPercentile.toFixed(1)}%)`,
+        text: `${allInData.length} mãos em All-in | Sorte Global: ${luckPercentile.toFixed(1)}% (100% é máximo azar, 0% é sorte)`,
         xref: 'paper',
         yref: 'paper',
         x: 0.5,
         y: 1.06,
         showarrow: false,
-        font: { size: 14 },
+        font: { size: 14, color: '#94a3b8' },
       },
     ],
     shapes: [
@@ -450,7 +464,7 @@ export function createAllInEquityChart(
         yref: 'y2',
         y0: 1,
         y1: 0,
-        line: { color: 'rgba(0,0,0,0.25)', dash: 'dash' },
+        line: { color: 'rgba(255,255,255,0.25)', dash: 'dash' },
       },
     ],
   }

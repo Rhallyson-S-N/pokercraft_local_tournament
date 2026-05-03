@@ -17,3 +17,8 @@ target/
 
 # Open source tools to analyze
 open_sources/
+
+# Ignorar arquivos sensíveis e referências
+ref/
+hand_history_test/
+*.html

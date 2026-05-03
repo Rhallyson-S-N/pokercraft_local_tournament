@@ -54,6 +54,7 @@ export function getHistoricalPerformanceData(
   }
 
   // Average buy-in
+
   const avgBuyInExpanding = expandingMean(buyIns)
   const avgBuyInRolling: Record<number, (number | null)[]> = {}
   for (const ws of windowSizes) {
@@ -67,10 +68,10 @@ export function getHistoricalPerformanceData(
   traces.push({
     x: indices,
     y: netProfit,
-    name: 'Net Profit',
+    name: 'Lucro Líquido',
     mode: 'lines',
     legendgroup: 'profit',
-    legendgrouptitle: { text: 'Profits & Rakes' },
+    legendgrouptitle: { text: 'Lucros & Rake' },
     hovertemplate: '%{y:$,.2f}',
     yaxis: 'y1',
   } as Data)
@@ -78,7 +79,7 @@ export function getHistoricalPerformanceData(
   traces.push({
     x: indices,
     y: netRake,
-    name: 'Net Rake',
+    name: 'Rake Pago',
     mode: 'lines',
     legendgroup: 'profit',
     visible: 'legendonly',
@@ -89,7 +90,7 @@ export function getHistoricalPerformanceData(
   traces.push({
     x: indices,
     y: idealProfit,
-    name: 'Ideal Profit',
+    name: 'Lucro Ideal',
     mode: 'lines',
     legendgroup: 'profit',
     hovertemplate: '%{y:$,.2f}',
@@ -110,10 +111,10 @@ export function getHistoricalPerformanceData(
   traces.push({
     x: indices,
     y: profitableExpanding,
-    name: 'Since #0',
+    name: 'Desde o #0',
     mode: 'lines',
     legendgroup: 'profitableRatio',
-    legendgrouptitle: { text: 'Profitable Ratio' },
+    legendgrouptitle: { text: 'Taxa de Lucro (ITM)' },
     hovertemplate: '%{y:.2%}',
     yaxis: 'y2',
   } as Data)
@@ -122,7 +123,7 @@ export function getHistoricalPerformanceData(
     traces.push({
       x: indices,
       y: profitableRolling[ws],
-      name: `Recent ${ws}`,
+      name: `Últimos ${ws}`,
       mode: 'lines',
       legendgroup: 'profitableRatio',
       visible: ws > 25 ? 'legendonly' : true,
@@ -135,10 +136,10 @@ export function getHistoricalPerformanceData(
   traces.push({
     x: indices,
     y: avgBuyInExpanding,
-    name: 'Since #0',
+    name: 'Desde o #0',
     mode: 'lines',
     legendgroup: 'avgBuyIn',
-    legendgrouptitle: { text: 'Avg Buy-In' },
+    legendgrouptitle: { text: 'Buy-in Médio' },
     hovertemplate: '%{y:$,.2f}',
     yaxis: 'y3',
   } as Data)
@@ -147,7 +148,7 @@ export function getHistoricalPerformanceData(
     traces.push({
       x: indices,
       y: avgBuyInRolling[ws],
-      name: `Recent ${ws}`,
+      name: `Últimos ${ws}`,
       mode: 'lines',
       legendgroup: 'avgBuyIn',
       visible: ws > 25 ? 'legendonly' : true,
@@ -175,7 +176,10 @@ export function getHistoricalPerformanceData(
   const maxAvgBuyIn = Math.max(...allAvgBuyInValues)
 
   const layout: Partial<Layout> = {
-    title: { text: 'Historical Performance' },
+    paper_bgcolor: 'transparent',
+    plot_bgcolor: 'transparent',
+    font: { color: '#e2e8f0' },
+    title: { text: 'Performance Histórica' },
     hovermode: 'x unified',
     height: 800,
     grid: {
@@ -185,24 +189,33 @@ export function getHistoricalPerformanceData(
       roworder: 'top to bottom',
     },
     xaxis: {
+      gridcolor: 'rgba(255,255,255,0.05)',
+      zerolinecolor: 'rgba(255,255,255,0.1)',
       showticklabels: false,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      unifiedhovertitle: { text: 'Tourney #%{x}' } as any,
+      unifiedhovertitle: { text: 'Torneio #%{x}' } as any,
     } as Partial<Layout['xaxis']>,
     xaxis2: {
+      gridcolor: 'rgba(255,255,255,0.05)',
+      zerolinecolor: 'rgba(255,255,255,0.1)',
       showticklabels: false,
     },
     xaxis3: {
-      // Show tick labels only on bottom chart
       showticklabels: true,
+      gridcolor: 'rgba(255,255,255,0.05)',
+      zerolinecolor: 'rgba(255,255,255,0.1)',
     },
     yaxis: {
-      title: { text: 'Net Profit & Rake' },
+      gridcolor: 'rgba(255,255,255,0.05)',
+      zerolinecolor: 'rgba(255,255,255,0.1)',
+      title: { text: 'Lucro Líquido & Rake' },
       tickformat: '$',
       domain: [0.7, 1],
     },
     yaxis2: {
-      title: { text: 'Profitable Ratio' },
+      gridcolor: 'rgba(255,255,255,0.05)',
+      zerolinecolor: 'rgba(255,255,255,0.1)',
+      title: { text: 'Taxa de Lucro (ITM)' },
       tickformat: '.0%',
       range: [
         Math.max(0, minProfitableRolling - 0.02),
@@ -211,7 +224,9 @@ export function getHistoricalPerformanceData(
       domain: [0.4, 0.65],
     },
     yaxis3: {
-      title: { text: 'Avg Buy-In' },
+      gridcolor: 'rgba(255,255,255,0.05)',
+      zerolinecolor: 'rgba(255,255,255,0.1)',
+      title: { text: 'Buy-In Médio' },
       type: 'log',
       tickformat: '$',
       range: [
@@ -238,7 +253,7 @@ export function getHistoricalPerformanceData(
         yref: 'y',
         y0: 0,
         y1: 0,
-        line: { color: 'rgba(255,0,0,0.3)', dash: 'dash' },
+        line: { color: 'rgba(239,68,68,0.5)', dash: 'dash' },
       },
       // Current net profit line
       {
@@ -249,7 +264,7 @@ export function getHistoricalPerformanceData(
         yref: 'y',
         y0: netProfit[netProfit.length - 1],
         y1: netProfit[netProfit.length - 1],
-        line: { color: 'rgba(0,0,255,0.3)', dash: 'dash' },
+        line: { color: 'rgba(59,130,246,0.5)', dash: 'dash' },
       },
       // Max drawdown line
       {
@@ -260,7 +275,7 @@ export function getHistoricalPerformanceData(
         yref: 'y',
         y0: maxDrawdown[maxDrawdown.length - 1],
         y1: maxDrawdown[maxDrawdown.length - 1],
-        line: { color: 'rgba(171,99,250,0.5)', dash: 'dash' },
+        line: { color: 'rgba(168,85,247,0.5)', dash: 'dash' },
       },
       // Buy-in threshold lines
       {
@@ -271,7 +286,7 @@ export function getHistoricalPerformanceData(
         yref: 'y3',
         y0: 5,
         y1: 5,
-        line: { color: 'rgba(0,0,0,0.3)', dash: 'dash' },
+        line: { color: 'rgba(255,255,255,0.2)', dash: 'dash' },
       },
       {
         type: 'line',
@@ -281,7 +296,7 @@ export function getHistoricalPerformanceData(
         yref: 'y3',
         y0: 20,
         y1: 20,
-        line: { color: 'rgba(0,0,0,0.3)', dash: 'dash' },
+        line: { color: 'rgba(255,255,255,0.2)', dash: 'dash' },
       },
       {
         type: 'line',
@@ -291,11 +306,10 @@ export function getHistoricalPerformanceData(
         yref: 'y3',
         y0: 100,
         y1: 100,
-        line: { color: 'rgba(0,0,0,0.3)', dash: 'dash' },
+        line: { color: 'rgba(255,255,255,0.2)', dash: 'dash' },
       },
     ],
     annotations: [
-      // Break-even label (right side, below line)
       {
         text: '<b>Break-even</b>',
         xref: 'paper',
@@ -305,11 +319,10 @@ export function getHistoricalPerformanceData(
         y: 0,
         yanchor: 'top',
         showarrow: false,
-        font: { color: 'rgba(255,0,0,0.5)', size: 14 },
+        font: { color: 'rgba(239,68,68,0.8)', size: 14 },
       },
-      // Current net profit label (left side, above line)
       {
-        text: '<b>Current Net Profit</b>',
+        text: '<b>Lucro Atual</b>',
         xref: 'paper',
         x: 0,
         xanchor: 'left',
@@ -317,9 +330,8 @@ export function getHistoricalPerformanceData(
         y: netProfit[netProfit.length - 1],
         yanchor: 'bottom',
         showarrow: false,
-        font: { color: 'rgba(0,0,255,0.5)', size: 14 },
+        font: { color: 'rgba(96,165,250,0.8)', size: 14 },
       },
-      // Max drawdown label (left side, above line)
       {
         text: '<b>Max Drawdown</b>',
         xref: 'paper',
@@ -329,12 +341,10 @@ export function getHistoricalPerformanceData(
         y: maxDrawdown[maxDrawdown.length - 1],
         yanchor: 'bottom',
         showarrow: false,
-        font: { color: 'rgba(171,99,250,0.7)', size: 14 },
+        font: { color: 'rgba(192,132,252,0.8)', size: 14 },
       },
-      // Buy-in threshold labels (left side, below line)
-      // Note: y3 is log scale, so y values need to be in log10
       {
-        text: '<b>Micro/Low</b>',
+        text: '<b>Micro</b>',
         xref: 'paper',
         x: 0,
         xanchor: 'left',
@@ -342,7 +352,7 @@ export function getHistoricalPerformanceData(
         y: Math.log10(5),
         yanchor: 'top',
         showarrow: false,
-        font: { color: 'rgba(0,0,0,0.5)', size: 12 },
+        font: { color: 'rgba(255,255,255,0.5)', size: 12 },
       },
       {
         text: '<b>Low/Mid</b>',
@@ -353,10 +363,10 @@ export function getHistoricalPerformanceData(
         y: Math.log10(20),
         yanchor: 'top',
         showarrow: false,
-        font: { color: 'rgba(0,0,0,0.5)', size: 12 },
+        font: { color: 'rgba(255,255,255,0.5)', size: 12 },
       },
       {
-        text: '<b>Mid/High</b>',
+        text: '<b>High</b>',
         xref: 'paper',
         x: 0,
         xanchor: 'left',
@@ -364,7 +374,7 @@ export function getHistoricalPerformanceData(
         y: Math.log10(100),
         yanchor: 'top',
         showarrow: false,
-        font: { color: 'rgba(0,0,0,0.5)', size: 12 },
+        font: { color: 'rgba(255,255,255,0.5)', size: 12 },
       },
     ],
   }

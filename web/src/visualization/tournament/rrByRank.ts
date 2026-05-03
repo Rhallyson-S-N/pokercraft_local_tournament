@@ -75,11 +75,11 @@ export function getRRByRankData(tournaments: TournamentSummary[]): RRByRankData 
       x: rankPercentiles,
       y: rrValues,
       mode: 'markers',
-      name: 'RR by Percentile',
+      name: 'RR por Percentil',
       customdata: data.map(d => [d.name, d.totalPlayers, d.rank, d.rr, d.peRR]),
       hovertemplate:
         '%{customdata[0]}<br>' +
-        'Rank: %{customdata[2]}/%{customdata[1]}<br>' +
+        'Posição: %{customdata[2]}/%{customdata[1]}<br>' +
         'RR: %{customdata[3]:.2f}<br>' +
         'PERR: %{customdata[4]:.4f}<extra></extra>',
     } as Data,
@@ -89,9 +89,9 @@ export function getRRByRankData(tournaments: TournamentSummary[]): RRByRankData 
       x: rankPercentiles,
       y: peRRValues,
       mode: 'markers',
-      name: 'PERR (Percentile × RR)',
+      name: 'PERR (Percentil × RR)',
       visible: 'legendonly',
-      marker: { color: '#BB75FF' },
+      marker: { color: '#c084fc' }, // purple-400
       customdata: data.map(d => [d.name, d.totalPlayers, d.rank, d.rr, d.peRR]),
       hovertemplate:
         '%{customdata[0]}<br>' +
@@ -104,29 +104,38 @@ export function getRRByRankData(tournaments: TournamentSummary[]): RRByRankData 
       x: fittedX,
       y: fittedY,
       mode: 'lines',
-      name: 'RR Trendline (top 12.5%)',
-      line: { color: 'rgba(54,234,201,0.4)' },
+      name: 'Linha de Tendência RR (Top 12.5%)',
+      line: { color: 'rgba(54,234,201,0.6)' },
       hoverinfo: 'skip',
     } as Data,
   ]
 
   const layout: Partial<Layout> = {
-    title: { text: 'RR by Rank Percentile' },
+    paper_bgcolor: 'transparent',
+    plot_bgcolor: 'transparent',
+    font: { color: '#e2e8f0' },
+    title: { text: 'RR por Percentil de Classificação' },
     height: 500,
     xaxis: {
-      title: { text: 'Rank Percentile' },
+      gridcolor: 'rgba(255,255,255,0.05)',
+      zerolinecolor: 'rgba(255,255,255,0.1)',
+      title: { text: 'Percentil de Classificação' },
       type: 'log',
       tickformat: ',.0%',
       range: [0, log10OrNaN(minPercentile) - 0.2],
       autorange: false,
     },
     yaxis: {
+      gridcolor: 'rgba(255,255,255,0.05)',
+      zerolinecolor: 'rgba(255,255,255,0.1)',
       title: { text: 'RR' },
       type: 'log',
       range: [-1, log10OrNaN(Math.max(maxRR, 1)) + 0.1],
       autorange: false,
     },
     yaxis2: {
+      gridcolor: 'rgba(255,255,255,0.05)',
+      zerolinecolor: 'rgba(255,255,255,0.1)',
       title: { text: 'PERR' },
       type: 'log',
       overlaying: 'y',
@@ -151,7 +160,7 @@ export function getRRByRankData(tournaments: TournamentSummary[]): RRByRankData 
         yref: 'y',
         y0: 1,
         y1: 1,
-        line: { color: 'rgba(255,0,0,0.3)', dash: 'dash' },
+        line: { color: 'rgba(239,68,68,0.5)', dash: 'dash' },
       },
       // ITM cutoff vertical line (12.5%)
       {
@@ -162,7 +171,7 @@ export function getRRByRankData(tournaments: TournamentSummary[]): RRByRankData 
         yref: 'paper',
         y0: 0,
         y1: 1,
-        line: { color: 'rgba(74,131,78,0.7)', dash: 'dash' },
+        line: { color: 'rgba(74,222,128,0.7)', dash: 'dash' },
       },
       // 100% vertical line
       {
@@ -173,7 +182,7 @@ export function getRRByRankData(tournaments: TournamentSummary[]): RRByRankData 
         yref: 'paper',
         y0: 0,
         y1: 1,
-        line: { color: 'rgb(180,180,180)', dash: 'dash' },
+        line: { color: 'rgba(255,255,255,0.2)', dash: 'dash' },
       },
     ],
     annotations: [
@@ -186,17 +195,17 @@ export function getRRByRankData(tournaments: TournamentSummary[]): RRByRankData 
         y: Math.log10(1), // log10(1) = 0 for RR = 1 on log scale
         yanchor: 'bottom',
         showarrow: false,
-        font: { color: 'rgba(255,0,0,0.5)', size: 14 },
+        font: { color: 'rgba(239,68,68,0.8)', size: 14 },
       },
       {
-        text: 'Rough ITM Cut (~12.5%)',
+        text: 'Corte ITM Aprox (~12.5%)',
         xref: 'x',
         x: 1 / 8,
         yref: 'paper',
         y: 0.98,
         showarrow: false,
         xanchor: 'right',
-        font: { color: 'rgba(74,131,78,0.9)', size: 12 },
+        font: { color: 'rgba(74,222,128,0.9)', size: 12 },
       },
     ],
   }

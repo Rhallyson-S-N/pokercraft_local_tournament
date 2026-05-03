@@ -5,10 +5,15 @@
 import { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react'
 import Plot from 'react-plotly.js'
 import type { Data, Layout } from 'plotly.js-dist-min'
-import type { HandHistory } from '../types'
+import type { HandHistory, TournamentSummary } from '../types'
 import type { AllInHandData } from '../visualization/handHistory/allInEquityAsync'
-import type { ExportChart } from '../export/htmlExport'
+import type { ExportChart, ExportHTMLSection } from '../export/htmlExport'
+import { generateHoleCardsHTML, generatePositionHTML } from '../export/htmlExport'
 import { yieldToBrowser } from '../utils'
+import { calculatePositionStats, type PositionStat, type StackInterval } from '../visualization/handHistory/stats'
+import { HistoricoJogo } from './handHistory/HistoricoJogo'
+import { PosicaoTable } from './handHistory/PosicaoTable'
+import { HoleCardsGrid } from './handHistory/HoleCardsGrid'
 
 interface ChartData {
   traces: Data[]
@@ -17,18 +22,24 @@ interface ChartData {
 
 interface HandHistoryChartsProps {
   handHistories: HandHistory[]
+  tournaments: TournamentSummary[]
 }
+
+export type SubTab = 'historico' | 'ev' | 'holecards' | 'posicao'
 
 interface ChartsState {
   chipHistories: ChartData | null
   allInEquity: ChartData | null
   handUsage: ChartData | null
+  posicaoStats: Record<StackInterval, Record<string, PositionStat>> | null
   isComputing: boolean
   progress: { message: string; percentage: number }
+  activeSubTab: SubTab
 }
 
 export interface HandHistoryChartsRef {
   getChartData: () => ExportChart[]
+  getHTMLSections: () => ExportHTMLSection[]
 }
 
 // Global cache for equity results (persists across re-renders)
@@ -36,13 +47,15 @@ const equityCache = new Map<string, AllInHandData>()
 let cachedLuckScore = 0
 
 export const HandHistoryCharts = forwardRef<HandHistoryChartsRef, HandHistoryChartsProps>(
-  function HandHistoryCharts({ handHistories }, ref) {
+  function HandHistoryCharts({ handHistories, tournaments }, ref) {
   const [state, setState] = useState<ChartsState>({
     chipHistories: null,
     allInEquity: null,
     handUsage: null,
+    posicaoStats: null,
     isComputing: false,
     progress: { message: '', percentage: 0 },
+    activeSubTab: 'historico'
   })
 
   const computeIdRef = useRef(0)
@@ -52,9 +65,18 @@ export const HandHistoryCharts = forwardRef<HandHistoryChartsRef, HandHistoryCha
     getChartData() {
       const charts: ExportChart[] = []
       if (state.chipHistories) charts.push({ name: 'Chip Histories', ...state.chipHistories })
-      if (state.handUsage) charts.push({ name: 'Hand Usage Heatmaps', ...state.handUsage })
       if (state.allInEquity) charts.push({ name: 'All-In Equity', ...state.allInEquity })
       return charts
+    },
+    getHTMLSections() {
+      const sections: ExportHTMLSection[] = []
+      if (handHistories.length > 0) {
+        sections.push(generateHoleCardsHTML(handHistories))
+      }
+      if (state.posicaoStats) {
+        sections.push(generatePositionHTML(state.posicaoStats['all'], handHistories.length))
+      }
+      return sections
     },
   }))
 
@@ -98,20 +120,31 @@ export const HandHistoryCharts = forwardRef<HandHistoryChartsRef, HandHistoryCha
 
         if (isStale()) return
 
-        // Chip histories (always recompute - fast enough)
         setState(prev => ({
           ...prev,
-          progress: { message: 'Generating chip histories...', percentage: 10 },
+          progress: { message: 'Calculating Stats...', percentage: 10 },
         }))
         await yieldToBrowser()
 
+        const posicaoStats = calculatePositionStats(handHistories)
+
+        if (isStale()) return
+
+        setState(prev => ({
+          ...prev,
+          posicaoStats,
+          progress: { message: 'Generating chip histories...', percentage: 15 },
+        }))
+        await yieldToBrowser()
+
+        // Chip histories (always recompute - fast enough)
         const chipHistories = await getChipHistoriesData(handHistories)
         if (isStale()) return
 
         setState(prev => ({
           ...prev,
           chipHistories,
-          progress: { message: 'Generating hand usage heatmaps...', percentage: 15 },
+          progress: { message: 'Generating hand usage heatmaps...', percentage: 20 },
         }))
         await yieldToBrowser()
 
@@ -122,7 +155,7 @@ export const HandHistoryCharts = forwardRef<HandHistoryChartsRef, HandHistoryCha
         setState(prev => ({
           ...prev,
           handUsage,
-          progress: { message: 'Checking equity cache...', percentage: 20 },
+          progress: { message: 'Checking equity cache...', percentage: 25 },
         }))
         await yieldToBrowser()
 
@@ -135,7 +168,7 @@ export const HandHistoryCharts = forwardRef<HandHistoryChartsRef, HandHistoryCha
             ...prev,
             progress: {
               message: `Found ${cachedCount} cached, calculating ${uncachedHands.length} new...`,
-              percentage: 25,
+              percentage: 30,
             },
           }))
 
@@ -144,7 +177,7 @@ export const HandHistoryCharts = forwardRef<HandHistoryChartsRef, HandHistoryCha
             uncachedHands,
             (current, total) => {
               if (!isStale()) {
-                const pct = 25 + Math.floor((current / total) * 70)
+                const pct = 30 + Math.floor((current / total) * 65)
                 setState(prev => ({
                   ...prev,
                   progress: {
@@ -212,6 +245,8 @@ export const HandHistoryCharts = forwardRef<HandHistoryChartsRef, HandHistoryCha
     )
   }
 
+  const setSubTab = (tab: SubTab) => setState(prev => ({ ...prev, activeSubTab: tab }))
+
   return (
     <div className="charts-container">
       {state.isComputing && (
@@ -226,41 +261,59 @@ export const HandHistoryCharts = forwardRef<HandHistoryChartsRef, HandHistoryCha
         </div>
       )}
 
-      {state.chipHistories && state.chipHistories.traces.length > 0 && (
-        <section className="chart-section">
-          <Plot
-            data={state.chipHistories.traces}
-            layout={{ ...state.chipHistories.layout, autosize: true }}
-            useResizeHandler
-            style={{ width: '100%', height: '900px' }}
-            config={{ responsive: true }}
-          />
-        </section>
-      )}
+      {/* Sub Tabs Navigation matching GGNetwork */}
+      <nav className="inner-tabs">
+        <button className={`inner-tab ${state.activeSubTab === 'historico' ? 'active' : ''}`} onClick={() => setSubTab('historico')}>Histórico de Jogo</button>
+        <button className={`inner-tab ${state.activeSubTab === 'ev' ? 'active' : ''}`} onClick={() => setSubTab('ev')}>Gráfico de EV</button>
+        <button className={`inner-tab ${state.activeSubTab === 'holecards' ? 'active' : ''}`} onClick={() => setSubTab('holecards')}>Hole cards</button>
+        <button className={`inner-tab ${state.activeSubTab === 'posicao' ? 'active' : ''}`} onClick={() => setSubTab('posicao')}>Posição</button>
+      </nav>
 
-      {state.handUsage && state.handUsage.traces.length > 0 && (
-        <section className="chart-section">
-          <Plot
-            data={state.handUsage.traces}
-            layout={{ ...state.handUsage.layout, autosize: true }}
-            useResizeHandler
-            style={{ width: '100%', height: '900px' }}
-            config={{ responsive: true }}
-          />
-        </section>
-      )}
+      {/* Tab Content */}
+      <div className="sub-tab-content">
+        {state.activeSubTab === 'historico' && (
+          <section className="chart-section no-bg">
+            <HistoricoJogo handHistories={handHistories} tournaments={tournaments} />
+          </section>
+        )}
 
-      {state.allInEquity && state.allInEquity.traces.length > 0 && (
-        <section className="chart-section">
-          <Plot
-            data={state.allInEquity.traces}
-            layout={{ ...state.allInEquity.layout, autosize: true }}
-            useResizeHandler
-            style={{ width: '100%', height: '700px' }}
-            config={{ responsive: true }}
-          />
-        </section>
-      )}
+        {state.activeSubTab === 'ev' && state.allInEquity && (
+          <section className="chart-section">
+            <div style={{ marginBottom: '1.5rem', padding: '1.5rem', background: 'rgba(15, 23, 42, 0.6)', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.05)', color: '#94a3b8' }}>
+              <h4 style={{ color: '#e2e8f0', marginTop: 0, marginBottom: '0.75rem', fontSize: '1.1rem' }}>Sorte ou Azar? Entenda seus All-ins (Gráfico de EV)</h4>
+              <p style={{ margin: '0 0 0.5rem 0', lineHeight: 1.5, fontSize: '0.95rem' }}>
+                No poker, quando você aposta todas as suas fichas (All-in), a matemática te dá uma porcentagem de chance exata de vencer aquela mão. Este gráfico analisa todas as vezes que você foi All-in para te dizer se você está "dando sorte" ou não!
+              </p>
+              <ul style={{ margin: '0.5rem 0', paddingLeft: '1.2rem', lineHeight: 1.6, fontSize: '0.95rem' }}>
+                <li><span style={{ color: '#e2e8f0', fontWeight: 'bold' }}>Gráfico de Cima (Quantidade):</span> Mostra quantas vezes você foi All-in. Barras mais à direita significam que você era o favorito (boas chances). As cores mostram se você <span style={{ color: '#4ade80' }}>ganhou (Verde)</span>, <span style={{ color: '#fbbf24' }}>empatou (Amarelo)</span> ou <span style={{ color: '#ef4444' }}>perdeu (Vermelho)</span>.</li>
+                <li><span style={{ color: '#e2e8f0', fontWeight: 'bold' }}>Gráfico de Baixo (Taxa de Vitória):</span> Aqui é onde você descobre a verdade! A <strong>linha tracejada</strong> que sobe na diagonal representa a "justiça matemática" perfeita.</li>
+              </ul>
+              <p style={{ margin: '0.5rem 0 0 0', lineHeight: 1.5, fontSize: '0.95rem' }}>
+                <em>Dica de Leitura:</em> Se no gráfico de baixo as barras verdes <strong style={{ color: '#4ade80' }}>ultrapassam</strong> a linha tracejada, você teve sorte (ganhou mais vezes do que deveria). Se elas ficam <strong style={{ color: '#ef4444' }}>abaixo</strong> da linha tracejada, você deu azar e a matemática estava contra você no curto prazo!
+              </p>
+            </div>
+            <Plot
+              data={state.allInEquity.traces}
+              layout={{ ...state.allInEquity.layout, autosize: true }}
+              useResizeHandler
+              style={{ width: '100%', height: '700px' }}
+              config={{ responsive: true }}
+            />
+          </section>
+        )}
+
+        {state.activeSubTab === 'holecards' && (
+          <section className="chart-section">
+            <HoleCardsGrid handHistories={handHistories} />
+          </section>
+        )}
+
+        {state.activeSubTab === 'posicao' && state.posicaoStats && (
+          <section className="chart-section no-bg">
+            <PosicaoTable stats={state.posicaoStats} totalHands={handHistories.length} />
+          </section>
+        )}
+      </div>
     </div>
   )
 })

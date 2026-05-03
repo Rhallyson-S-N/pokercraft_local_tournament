@@ -61,8 +61,9 @@ function App() {
   const handleExport = useCallback(() => {
     const tournamentCharts = tournamentChartsRef.current?.getChartData() ?? []
     const handHistoryCharts = handHistoryChartsRef.current?.getChartData() ?? []
-    if (tournamentCharts.length === 0 && handHistoryCharts.length === 0) return
-    const html = generateExportHTML(tournamentCharts, handHistoryCharts)
+    const htmlSections = handHistoryChartsRef.current?.getHTMLSections() ?? []
+    if (tournamentCharts.length === 0 && handHistoryCharts.length === 0 && htmlSections.length === 0) return
+    const html = generateExportHTML(tournamentCharts, handHistoryCharts, htmlSections)
     const timestamp = new Date().toISOString().slice(0, 10)
     downloadHTML(html, `pokercraft-export-${timestamp}.html`)
   }, [])
@@ -121,7 +122,7 @@ function App() {
       </div>
 
       <div style={{ display: activeTab === 'handHistory' ? 'block' : 'none' }}>
-        <HandHistoryCharts ref={handHistoryChartsRef} handHistories={handHistories} />
+        <HandHistoryCharts ref={handHistoryChartsRef} handHistories={handHistories} tournaments={tournaments} />
       </div>
     </div>
   )

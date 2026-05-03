@@ -184,6 +184,9 @@ export async function getChipHistoriesData(
   const avgDiedAt = diedAt.length > 0 ? diedAt.reduce((a, b) => a + b, 0) / diedAt.length : 0
 
   const layout: Partial<Layout> = {
+    paper_bgcolor: 'transparent',
+    plot_bgcolor: 'transparent',
+    font: { color: '#e2e8f0' },
     title: { text: 'Chip Histories' },
     height: 900,
     showlegend: false,
@@ -194,12 +197,16 @@ export async function getChipHistoriesData(
       roworder: 'top to bottom',
     },
     xaxis: {
+      gridcolor: 'rgba(255,255,255,0.05)',
+      zerolinecolor: 'rgba(255,255,255,0.1)',
       title: { text: 'Hand Number' },
       domain: [0, 1],
       anchor: 'y',
       range: [0, maxHandLength + 1],
     },
     yaxis: {
+      gridcolor: 'rgba(255,255,255,0.05)',
+      zerolinecolor: 'rgba(255,255,255,0.1)',
       title: { text: 'Stack (x initial)' },
       type: 'log',
       domain: [0.45, 1],
@@ -207,11 +214,15 @@ export async function getChipHistoriesData(
       range: [-2.25, 2],
     },
     xaxis2: {
+      gridcolor: 'rgba(255,255,255,0.05)',
+      zerolinecolor: 'rgba(255,255,255,0.1)',
       title: { text: 'Hand Number (Bust)' },
       domain: [0, 0.45],
       anchor: 'y2',
     },
     yaxis2: {
+      gridcolor: 'rgba(255,255,255,0.05)',
+      zerolinecolor: 'rgba(255,255,255,0.1)',
       title: { text: 'Survival Rate' },
       tickformat: '.0%',
       domain: [0, 0.30],

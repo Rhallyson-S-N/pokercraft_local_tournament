@@ -7,7 +7,7 @@ import type { TournamentSummary } from '../../types'
 import { getTournamentTimeOfWeek } from '../../types'
 import type { Data, Layout } from 'plotly.js-dist-min'
 
-const WEEKDAY_NAMES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const
+const WEEKDAY_NAMES = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'] as const
 
 export interface PrizePiesData {
   traces: Data[]
@@ -37,7 +37,7 @@ export function getPrizePiesData(tournaments: TournamentSummary[]): PrizePiesDat
 
   const pieLabels = [
     ...mainTournaments.map(t => formatTournamentName(t)),
-    ...(othersPrize > 0 ? ['Others'] : []),
+    ...(othersPrize > 0 ? ['Outros'] : []),
   ]
   const pieValues = [
     ...mainTournaments.map(t => t.myPrize),
@@ -99,7 +99,7 @@ export function getPrizePiesData(tournaments: TournamentSummary[]): PrizePiesDat
       labels: pieLabels,
       values: pieValues,
       pull: piePulls,
-      name: 'Individual Prizes',
+      name: 'Prêmios Individuais',
       hovertemplate: '%{label}: %{value:$,.2f}',
       domain: { x: [0, 0.48], y: [0, 1] },
       showlegend: false,
@@ -110,36 +110,39 @@ export function getPrizePiesData(tournaments: TournamentSummary[]): PrizePiesDat
       parents: sunburstParents,
       values: sunburstValues,
       maxdepth: 2,
-      name: 'Prizes by Weekday',
+      name: 'Prêmios por Dia da Semana',
       hovertemplate: '%{label}: %{value:$,.2f}',
       domain: { x: [0.52, 1], y: [0, 1] },
     } as Data,
   ]
 
   const layout: Partial<Layout> = {
+    paper_bgcolor: 'transparent',
+    plot_bgcolor: 'transparent',
+    font: { color: '#e2e8f0' },
     title: {
-      text: 'Prize Distribution',
-      subtitle: { text: 'Individual tournaments and by weekday' },
+      text: 'Distribuição de Prêmios',
+      subtitle: { text: 'Torneios individuais e por dia da semana' },
     },
     height: 500,
     annotations: [
       {
-        text: '<b>Individual Prizes</b>',
+        text: '<b>Prêmios Individuais</b>',
         x: 0.24,
         y: 1.05,
         xref: 'paper',
         yref: 'paper',
         showarrow: false,
-        font: { size: 14 },
+        font: { size: 14, color: '#e2e8f0' },
       },
       {
-        text: '<b>Prizes by Weekday</b>',
+        text: '<b>Prêmios por Dia da Semana</b>',
         x: 0.76,
         y: 1.05,
         xref: 'paper',
         yref: 'paper',
         showarrow: false,
-        font: { size: 14 },
+        font: { size: 14, color: '#e2e8f0' },
       },
     ],
   }

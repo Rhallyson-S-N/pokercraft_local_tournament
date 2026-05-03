@@ -208,17 +208,17 @@ export async function getHandUsageHeatmapsData(handHistories: HandHistory[]): Pr
 
   const traces: Data[] = []
 
-  // Position configurations (row, col, offset, name)
+  // Vertical layout requested by user: 9 rows x 1 column
   const positions: [number, number, number | null, string][] = [
     [1, 1, -5, 'UTG'],
-    [1, 2, -4, 'UTG+1'],
-    [1, 3, -3, 'MP'],
-    [2, 1, -2, 'MP+1'],
-    [2, 2, -1, 'CO'],
-    [2, 3, 0, 'BTN'],
-    [3, 1, 1, 'SB'],
-    [3, 2, 2, 'BB'],
-    [3, 3, null, 'All'],
+    [2, 1, -4, 'UTG+1'],
+    [3, 1, -3, 'MP'],
+    [4, 1, -2, 'MP+1'],
+    [5, 1, -1, 'CO'],
+    [6, 1, 0, 'BTN'],
+    [7, 1, 1, 'SB'],
+    [8, 1, 2, 'BB'],
+    [9, 1, null, 'Geral'],
   ]
 
   for (const [figRow, figCol, offset, posName] of positions) {
@@ -227,63 +227,81 @@ export async function getHandUsageHeatmapsData(handHistories: HandHistory[]): Pr
     const rangeUsage = getRangeUsage(matrix, 0.1)
 
     const z = matrix.map(row => row.map(cell => calcVPIP(cell)))
-    const title = `${posName} (VPIP ${(vpip * 100).toFixed(1)}%, Range ${(rangeUsage * 100).toFixed(1)}%)`
+    const title = `${posName}<br>Mãos Jogadas (VPIP): ${(vpip * 100).toFixed(1)}% | Range: ${(rangeUsage * 100).toFixed(1)}%`
 
     traces.push({
       type: 'heatmap',
+      x: CARD_NUMBERS,
+      y: CARD_NUMBERS,
       z: z,
       text: texts as unknown as string[],
       texttemplate: '%{text}',
-      showscale: false,
-      colorscale: 'YlGnBu',
+      textfont: {
+        family: 'Inter, sans-serif',
+        size: 11,
+        color: '#f8fafc', // Force white text so it's always visible on dark backgrounds
+      },
+      showscale: figRow === 9, // only show scale for the last one
+      colorscale: [
+        [0, 'rgba(15,23,42,0.3)'], 
+        [0.01, '#1e1b4b'], 
+        [0.5, '#7c3aed'], 
+        [1, '#ef4444']
+      ],
       zmin: 0,
       zmax: 1,
-      hovertemplate: '%{text}<br>VPIP: %{z:.1%}<extra></extra>',
-      xaxis: `x${(figRow - 1) * 3 + figCol}`,
-      yaxis: `y${(figRow - 1) * 3 + figCol}`,
+      hovertemplate: 'Cartas: %{text}<br>Taxa de Jogo: %{z:.1%}<extra></extra>',
+      xaxis: `x${figRow === 1 ? '' : figRow}`,
+      yaxis: `y${figRow === 1 ? '' : figRow}`,
       name: title,
     } as Data)
   }
 
-  // Build layout with 3x3 grid
+  // Build vertical layout 9x1
   const layout: Partial<Layout> = {
-    title: { text: 'Hand Usage by Position (VPIP Heatmaps)' },
-    height: 900,
+    paper_bgcolor: 'transparent',
+    plot_bgcolor: 'transparent',
+    font: { color: '#e2e8f0', family: 'Inter, sans-serif' },
+    title: { 
+      text: 'Mapa de Calor de Mãos por Posição',
+      font: { size: 24, color: '#f8fafc' }
+    },
+    // Very tall height to ensure perfect legibility of the 9 vertical heatmaps
+    height: 7000, // Even more height to ensure perfect fit without clipping
+    margin: { t: 150, b: 100, l: 150, r: 150 }, // Use margins to center the heatmaps horizontally
     showlegend: false,
     grid: {
-      rows: 3,
-      columns: 3,
+      rows: 9,
+      columns: 1,
       pattern: 'independent',
+      roworder: 'top to bottom',
+      ygap: 0.15, // Provide generous spacing between rows
     },
   }
 
   // Add individual subplot configurations
-  for (let row = 0; row < 3; row++) {
-    for (let col = 0; col < 3; col++) {
-      const idx = row * 3 + col + 1
-      const xDomain = [col / 3 + 0.02, (col + 1) / 3 - 0.02]
-      const yDomain = [1 - (row + 1) / 3 + 0.05, 1 - row / 3 - 0.05]
+  for (let row = 0; row < 9; row++) {
+    const idx = row + 1
+    const posConfig = positions[row]
+    const matrix = matrices.get(posConfig[2])!
+    const vpip = aggregateVPIP(matrix)
+    const rangeUsage = getRangeUsage(matrix, 0.1)
+    const axisTitle = `${posConfig[3]}<br><span style="font-size:14px;color:#94a3b8">VPIP: ${(vpip * 100).toFixed(1)}% | Range: ${(rangeUsage * 100).toFixed(1)}%</span>`
 
-      const posConfig = positions[row * 3 + col]
-      const matrix = matrices.get(posConfig[2])!
-      const vpip = aggregateVPIP(matrix)
-      const rangeUsage = getRangeUsage(matrix, 0.1)
-      const axisTitle = `${posConfig[3]} (VPIP ${(vpip * 100).toFixed(1)}%, Range ${(rangeUsage * 100).toFixed(1)}%)`
-
-      ;(layout as Record<string, unknown>)[`xaxis${idx === 1 ? '' : idx}`] = {
-        domain: xDomain,
-        showticklabels: false,
-        showgrid: false,
-        zeroline: false,
-        title: { text: axisTitle, font: { size: 11 } },
-      }
-      ;(layout as Record<string, unknown>)[`yaxis${idx === 1 ? '' : idx}`] = {
-        domain: yDomain,
-        showticklabels: false,
-        showgrid: false,
-        zeroline: false,
-        autorange: 'reversed',
-      }
+    ;(layout as Record<string, unknown>)[`xaxis${idx === 1 ? '' : idx}`] = {
+      showticklabels: true,
+      tickfont: { size: 12, color: '#94a3b8' },
+      showgrid: false,
+      zeroline: false,
+      side: 'top', // Put letters on top
+      title: { text: axisTitle, font: { size: 16, color: '#f1f5f9' }, standoff: 30 },
+    }
+    ;(layout as Record<string, unknown>)[`yaxis${idx === 1 ? '' : idx}`] = {
+      showticklabels: true,
+      tickfont: { size: 12, color: '#94a3b8' },
+      showgrid: false,
+      zeroline: false,
+      autorange: 'reversed', // Keep AA at top left
     }
   }
 

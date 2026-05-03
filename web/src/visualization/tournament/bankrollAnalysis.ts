@@ -99,7 +99,7 @@ export function getBankrollAnalysisData(
     }
   }
 
-  const labels = results.map(r => `${r.initialCapital} buy-ins`)
+  const labels = results.map(r => `${r.initialCapital} BI`)
   const bankruptcyRates = results.map(r => r.bankruptcyRate)
   const survivalRates = results.map(r => r.survivalRate)
 
@@ -108,8 +108,8 @@ export function getBankrollAnalysisData(
       type: 'bar',
       x: labels,
       y: bankruptcyRates,
-      name: 'Bankruptcy Rate',
-      marker: { color: 'rgb(242, 111, 111)' },
+      name: 'Risco de Quebra',
+      marker: { color: 'rgba(239, 68, 68, 0.8)' },
       text: bankruptcyRates.map(r => `${(r * 100).toFixed(1)}%`),
       textposition: 'auto',
       hovertemplate: '%{x}: %{y:.2%}',
@@ -118,8 +118,8 @@ export function getBankrollAnalysisData(
       type: 'bar',
       x: labels,
       y: survivalRates,
-      name: 'Survival Rate',
-      marker: { color: 'rgb(113, 222, 139)' },
+      name: 'Taxa de Sobrevivência',
+      marker: { color: 'rgba(74, 222, 128, 0.8)' },
       text: survivalRates.map(r => `${(r * 100).toFixed(1)}%`),
       textposition: 'auto',
       hovertemplate: '%{x}: %{y:.2%}',
@@ -127,17 +127,23 @@ export function getBankrollAnalysisData(
   ]
 
   const layout: Partial<Layout> = {
-    title: { text: 'Bankroll Analysis' },
+    paper_bgcolor: 'transparent',
+    plot_bgcolor: 'transparent',
+    font: { color: '#e2e8f0' },
+    title: { text: 'Análise de Bankroll' },
     barmode: 'stack',
     yaxis: {
+      gridcolor: 'rgba(255,255,255,0.05)',
+      zerolinecolor: 'rgba(255,255,255,0.1)',
       tickformat: '.0%',
       range: [0, 1],
     },
     xaxis: {
-      title: { text: 'Initial Capital' },
+      gridcolor: 'rgba(255,255,255,0.05)',
+      zerolinecolor: 'rgba(255,255,255,0.1)',
+      title: { text: 'Bankroll Inicial (Buy-ins)' },
     },
     legend: {
-      title: { text: 'Rate Type' },
       orientation: 'h',
       xanchor: 'center',
       x: 0.5,
