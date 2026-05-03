@@ -2,9 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/x-icon" href="pokercraft_local_favicon_C_L_green_64.ico" />
+    <link rel="icon" type="image/x-icon" href="/pokercraft_local_favicon_C_L_green_64.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pokercraft Local</title>
+    <title>Pokercraft Local — Poker Analytics</title>
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -22,10 +22,21 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Crimson+Pro:wght@300;400;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   </head>
   <body>
+    <!-- Floating poker decorations -->
+    <div class="floating-cards">
+      <div class="deco-card c1">♠</div>
+      <div class="deco-card c2" style="color: #c0392b">♥</div>
+      <div class="deco-card c3">♣</div>
+      <div class="deco-card c4" style="color: #c0392b">♦</div>
+      <div class="deco-card c5">♠</div>
+      <div class="deco-chip ch1"></div>
+      <div class="deco-chip ch2"></div>
+      <div class="deco-chip ch3"></div>
+    </div>
     <div id="root"></div>
-    <script type="module" src="src/main.tsx"></script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

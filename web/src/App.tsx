@@ -84,6 +84,12 @@ function App() {
         onExport={tournaments.length > 0 || handHistories.length > 0 ? handleExport : undefined}
       />
 
+      <div className="gold-divider">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M10 2 L12 8 L18 8 L13.5 12 L15.5 18 L10 14.5 L4.5 18 L6.5 12 L2 8 L8 8 Z" fill="#c9a84c" opacity="0.7"/>
+        </svg>
+      </div>
+
       <FileUploader
         onFilesSelected={parseFiles}
         isLoading={isLoading}
